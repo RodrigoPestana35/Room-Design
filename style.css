@@ -39,5 +39,9 @@ input[type="number"], input[type="text"], input[type="color"], input[type="file"
 }
 
 button {
+    border: 1px solid blue;
+    border-radius: 25px;
+    color: white;
+    background-color: blue;
     cursor: pointer;
 }
