@@ -15,6 +15,9 @@ let yAxis = 1;
 let zAxis = 2;
 let axis = xAxis;
 
+let cameraPosition = vec3.fromValues(0,0,0);
+let speed = 0.05;   //velocidade do movimento da camera
+
 
 window.onload = function () {
     init();
