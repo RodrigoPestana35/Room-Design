@@ -28,3 +28,16 @@
     padding: 5px;
     border: 2px solid grey;
 }
+
+label {
+    margin: 5px 0 2px;
+}
+
+input[type="number"], input[type="text"], input[type="color"], input[type="file"], select, button {
+    margin-bottom: 5px;
+    padding: 5px;
+}
+
+button {
+    cursor: pointer;
+}
