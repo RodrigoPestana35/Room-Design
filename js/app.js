@@ -105,6 +105,28 @@ const addPrimitive = () => {
     }
 }
 
+const addLight = () => {
+    //TODO
+    let x = document.getElementById("light-position-x").value;
+    let y = document.getElementById("light-position-y").value;
+    let z = document.getElementById("light-position-z").value;
+    let directionx = document.getElementById("light-direction-x").value;
+    let directiony = document.getElementById("light-direction-y").value;
+    let directionz = document.getElementById("light-direction-z").value;
+    let color = document.getElementById("light-color").value;
+
+    valid = x && y && z && directionx && directiony && directionz && color;
+
+    if(valid){
+        light = new THREE.DirectionalLight(color, 1);
+        light.position.set(x,y,z);
+        light.target.position.set(directionx,directiony,directionz);
+        scene.add(light.target);
+        scene.add(light);
+        console.log("aldka");
+    }
+}
+
 const render = () => {
     renderer.render(scene, camera);
     requestAnimationFrame(render);
