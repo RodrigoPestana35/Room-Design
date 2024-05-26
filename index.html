@@ -32,9 +32,40 @@
 
    </head>
    <body>
-      <canvas id="gl-canvas" width="800" height="800">
-         Sorry, but your browser does not support HTML5's canvas element.
-      </canvas>
+      <div class="container">
+         <div class="canvas-container">
+            <canvas id="gl-canvas" width="800" height="800">
+               Sorry, but your browser does not support HTML5's canvas element.
+            </canvas>
+         </div>
+         <div class="controls">
+            <div class="primitive-controls">
+               <label for="primitive-type">Tipo da Primitiva:</label>
+                <select id="primitive-type">
+                    <option value="">Selecionar uma Primitiva</option>
+                    <option value="">Cubo/Paralelipipedo</option>
+                    <option value="">Piramide Quadrangular</option>
+                </select>
+               <label>ID:</label>
+               <p>NUMERO DO ID AQUI</p>
+               <label for="primitive-height">Altura:</label>
+               <input type="number" id="primitive-height">
+               <label for="primitive-width">Largura:</label>
+               <input type="number" id="primitive-width">
+               <label for="primitive-depth">Profundidade:</label>
+               <input type="number" id="primitive-depth">
+               <label for="primitive-color">Cor:</label>
+               <input type="color" id="primitive-color" value="">
+               <button id="adicionar-primitiva">Adicionar Primitiva</button>
+            </div>
+            <div class="model-controls">
+               <label for="model-file">Modelo:</label>
+               <input type="file" id="model-file" accept=".obj">
+               <button id="add-model">Adicionar Modelo</button>
+            </div>
+         </div>
+      </div>
+
 
       <button id="rotateX">Rotate X</button>
       <button id="rotateY">Rotate Y</button>
