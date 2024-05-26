@@ -16,7 +16,8 @@ let zAxis = 2;
 let axis = xAxis;
 
 let cameraPosition = vec3.fromValues(0,0,0);
-let speed = 0.05;   //velocidade do movimento da camera
+let speed = 0.001;   //velocidade do movimento da camera
+let viewMatrix = mat4.create();
 
 let keysPressed = {};
 
@@ -90,17 +91,6 @@ function init() {
     image.onload = function () {
         configureTexture(image);
     }
-
-    // *** Create the event listeners for the buttons
-    document.getElementById("rotateX").onclick = function () {
-        axis = xAxis;
-    };
-    document.getElementById("rotateY").onclick = function () {
-        axis = yAxis;
-    };
-    document.getElementById("rotateZ").onclick = function () {
-        axis = zAxis;
-    };
 
     // *** Render ***
     render();
@@ -196,6 +186,26 @@ function render() {
     // Clear the canvas
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+    // Verifica quais teclas estão pressionadas e move a câmera
+    if (keysPressed['w']) {
+        cameraPosition[2] -= speed;
+    }
+    if (keysPressed['s']) {
+        cameraPosition[2] += speed;
+    }
+    if (keysPressed['a']) {
+        cameraPosition[0] -= speed;
+    }
+    if (keysPressed['d']) {
+        cameraPosition[0] += speed;
+    }
+    if (keysPressed['q']) {
+        cameraPosition[1] -= speed;
+    }
+    if (keysPressed['r']) {
+        cameraPosition[1] += speed;
+    }
+
     // Apply rotation
     switch (axis) {
         case xAxis:
@@ -210,6 +220,12 @@ function render() {
         default:
             return -1
     }
+
+    // Atualiza a matriz de visualização com a nova posição da câmera
+    mat4.lookAt(viewMatrix, cameraPosition, [0, 0, 0], [0, 1, 0]);
+
+    // Atualiza a matriz ctm com a viewMatrix
+    mat4.multiply(ctm, viewMatrix, ctm);
 
     // Transfer the information to the model viewer
     gl.uniformMatrix4fv(modelViewMatrix, false, ctm);
