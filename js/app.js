@@ -18,6 +18,16 @@ let axis = xAxis;
 let cameraPosition = vec3.fromValues(0,0,0);
 let speed = 0.05;   //velocidade do movimento da camera
 
+let keysPressed = {};
+
+window.addEventListener('keydown', (event) => {
+    keysPressed[event.key] = true;
+});
+
+window.addEventListener('keyup', (event) => {
+    keysPressed[event.key] = false;
+});
+
 
 window.onload = function () {
     init();
