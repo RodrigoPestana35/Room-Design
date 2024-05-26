@@ -14,12 +14,17 @@
 
 .controls {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     margin-top: 10px;
 }
 
 .primitive-controls, .model-controls, .light-controls, .object-controls {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-content: center;
     margin-bottom: 10px;
+    margin-right: 20px;
+    padding: 5px;
+    border: 2px solid grey;
 }
