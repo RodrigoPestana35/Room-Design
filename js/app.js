@@ -28,6 +28,8 @@ let moveCamera = {
     'r': false
 };
 
+let nPrimitivas = 0;
+
 window.addEventListener('keydown', (event) => {
     if (event.key in moveCamera) {
         moveCamera[event.key] = true;
@@ -49,212 +51,61 @@ function init() {
 
     // *** Get canvas ***
     const canvas = document.getElementById('gl-canvas');
+    //** Setup Renderer
+    renderer = new THREE.WebGLRenderer({canvas});
+    renderer.setClearColor(0xffffff);
 
-    /** @type {WebGLRenderingContext} */ // ONLY FOR VS CODE
-    gl = canvas.getContext('webgl') || canvas.getContext("experimental-webgl");
-    if (!gl) {
-        alert('WebGL not supported');
-        return;
-    }
+    //** Create a scene
+    scene = new THREE.Scene();
 
-    // *** Computes the cube ***
-    cube();
-
-    // *** Set viewport ***
-    gl.viewport(0, 0, canvas.width, canvas.height)
-
-    // *** Set color to the canvas ***
-    gl.clearColor(1.0, 1.0, 1.0, 1.0)
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    gl.enable(gl.DEPTH_TEST);
-
-    // *** Initialize vertex and fragment shader ***
-    program = initShaders(gl, "vertex-shader", "fragment-shader");
-    gl.useProgram(program);
-
-    // *** Send position data to the GPU ***
-    let vBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pointsArray), gl.STATIC_DRAW);
-
-    // *** Define the form of the data ***
-    let vPosition = gl.getAttribLocation(program, "vPosition");
-    gl.enableVertexAttribArray(vPosition);
-    gl.vertexAttribPointer(vPosition, 3, gl.FLOAT, false, 0, 0);
-
-    // *** Send texture data to the GPU ***
-    let tBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, tBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texCoordsArray), gl.STATIC_DRAW);
-
-    // *** Define the form of the data ***
-    let vTexCoord = gl.getAttribLocation(program, "vTexCoord");
-    gl.enableVertexAttribArray(vTexCoord);
-    gl.vertexAttribPointer(vTexCoord, 2, gl.FLOAT, false, 0, 0);
-
-    // *** Get a pointer for the model viewer
-    modelViewMatrix = gl.getUniformLocation(program, "modelViewMatrix");
-    ctm = mat4.create();
-
-    // Set the image for the texture
-    let image = new Image();
-    image.src = 'texture.png'
-    image.onload = function () {
-        configureTexture(image);
-    }
+    //Get button listeners
+    document.getElementById('adicionar-primitiva').addEventListener('click', addPrimitive);
+    document.getElementById("add-light").addEventListener('click', addLight);
+    //*Camera pestana TODO
+    const fov = 75;
+    const near = 0.1;
+    const far = 5;
+    const aspect = canvas.width / canvas.height;
+    camera = new THREE.PerspectiveCamera(fov,aspect,near,far);
+    camera.position.z = 3;
 
     // *** Render ***
     render();
 
 }
 
-function cube() {
+const addPrimitive = () => {
+    let primitiveType = document.getElementById('primitive-type').value;
+    let height = document.getElementById('primitive-height').value;
+    let width = document.getElementById('primitive-width').value;
+    let depth = document.getElementById('primitive-depth').value;
+    let color = document.getElementById('primitive-color').value;
 
-    // Specify the coordinates to draw
-    pointsArray = [
-        -.5, 0.5, 0.5,
-        -.5, -.5, 0.5,
-        0.5, -.5, 0.5,
-        -.5, 0.5, 0.5,
-        0.5, -.5, 0.5,
-        0.5, 0.5, 0.5,
-        0.5, 0.5, 0.5,
-        0.5, -.5, 0.5,
-        0.5, -.5, -.5,
-        0.5, 0.5, 0.5,
-        0.5, -.5, -.5,
-        0.5, 0.5, -.5,
-        0.5, -.5, 0.5,
-        -.5, -.5, 0.5,
-        -.5, -.5, -.5,
-        0.5, -.5, 0.5,
-        -.5, -.5, -.5,
-        0.5, -.5, -.5,
-        0.5, 0.5, -.5,
-        -.5, 0.5, -.5,
-        -.5, 0.5, 0.5,
-        0.5, 0.5, -.5,
-        -.5, 0.5, 0.5,
-        0.5, 0.5, 0.5,
-        -.5, -.5, -.5,
-        -.5, 0.5, -.5,
-        0.5, 0.5, -.5,
-        -.5, -.5, -.5,
-        0.5, 0.5, -.5,
-        0.5, -.5, -.5,
-        -.5, 0.5, -.5,
-        -.5, -.5, -.5,
-        -.5, -.5, 0.5,
-        -.5, 0.5, -.5,
-        -.5, -.5, 0.5,
-        -.5, 0.5, 0.5,
-    ];
+    valid = primitiveType && height && width && depth && color;
 
-    // 
-    texCoordsArray = [
-        0, 0,
-        0, 1,
-        1, 1,
-        0, 0,
-        1, 1,
-        1, 0,
-        0, 0,
-        0, 1,
-        1, 1,
-        0, 0,
-        1, 1,
-        1, 0,
-        0, 0,
-        0, 1,
-        1, 1,
-        0, 0,
-        1, 1,
-        1, 0,
-        0, 0,
-        0, 1,
-        1, 1,
-        0, 0,
-        1, 1,
-        1, 0,
-        0, 0,
-        0, 1,
-        1, 1,
-        0, 0,
-        1, 1,
-        1, 0,
-        0, 0,
-        0, 1,
-        1, 1,
-        0, 0,
-        1, 1,
-        1, 0,
-    ];
-
-
+    if (valid && nPrimitivas < 10){
+        switch (primitiveType) {
+        case "cube":
+            geometry = new THREE.BoxGeometry(width, height, depth);
+            material = new THREE.MeshBasicMaterial({color: color});
+            cube = new THREE.Mesh(geometry, material);
+            scene.add(cube);
+            nPrimitivas++;
+            break;
+        case "pyramid":
+            geometry = new THREE.ConeGeometry(width, height, 4);
+            material = new THREE.MeshBasicMaterial({color: color});
+            pyramid = new THREE.Mesh(geometry, material);
+            scene.add(pyramid);
+            nPrimitivas++;
+            break;
+        default:
+            return -1;
+        }
+    }
 }
 
-function render() {
-    // Clear the canvas
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-    // Reseta ctm a cada frame
-    ctm = mat4.create();
-
-    // Verifica quais teclas estão pressionadas e move a câmera
-    if (moveCamera['w']) {
-        mat4.rotateX(viewMatrix, viewMatrix, speed);
-    }
-    if (moveCamera['s']) {
-        mat4.rotateX(viewMatrix, viewMatrix, -speed);
-    }
-    if (moveCamera['a']) {
-        mat4.rotateY(viewMatrix, viewMatrix, speed);
-    }
-    if (moveCamera['d']) {
-        mat4.rotateY(viewMatrix, viewMatrix, -speed);
-    }
-    if (moveCamera['q']) {
-        mat4.rotateZ(viewMatrix, viewMatrix, speed);
-    }
-    if (moveCamera['r']) {
-        mat4.rotateZ(viewMatrix, viewMatrix, -speed);
-    }
-
-    // // Apply rotation
-    // switch (axis) {
-    //     case xAxis:
-    //         mat4.rotateX(ctm, ctm, angle);
-    //         break;
-    //     case yAxis:
-    //         mat4.rotateY(ctm, ctm, angle);
-    //         break;
-    //     case zAxis:
-    //         mat4.rotateZ(ctm, ctm, angle);
-    //         break;
-    //     default:
-    //         return -1
-    // }
-
-    // Atualiza a matriz ctm com a viewMatrix
-    mat4.multiply(ctm, viewMatrix, ctm);
-
-    // Transfer the information to the model viewer
-    gl.uniformMatrix4fv(modelViewMatrix, false, ctm);
-
-    // Draw the triangles
-    gl.drawArrays(gl.TRIANGLES, 0, pointsArray.length / 3);
-
-    // Make the new frame
+const render = () => {
+    renderer.render(scene, camera);
     requestAnimationFrame(render);
-}
-
-function configureTexture(image) {
-    let texture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
-    gl.generateMipmap(gl.TEXTURE_2D);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    gl.uniform1i(gl.getUniformLocation(program, "texture"), 0);
 }

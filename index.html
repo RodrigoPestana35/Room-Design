@@ -44,8 +44,8 @@
                <label for="primitive-type">Tipo da Primitiva:</label>
                 <select id="primitive-type">
                     <option value="">Selecionar uma Primitiva</option>
-                    <option value="">Cubo/Paralelipipedo</option>
-                    <option value="">Piramide Quadrangular</option>
+                    <option value="cube">Cubo/Paralelipipedo</option>
+                    <option value="pyramid">Piramide Quadrangular</option>
                 </select>
                <label>ID:</label>
                <p>NUMERO DO ID AQUI</p>
@@ -87,18 +87,13 @@
                <label for="light-direction-z">Z:</label>
                <input type="text" id="light-direction-z" placeholder="z">
                <label>Cor da Luz:</label>
-               <label for="light-color-R">R:</label>
-               <input type="text" id="light-color-R" placeholder="R">
-               <label for="light-color-G">G:</label>
-               <input type="text" id="light-color-G" placeholder="G">
-               <label for="light-color-B">B:</label>
-               <input type="text" id="light-color-B" placeholder="B">
+               <input type="color" id="light-color" value="">
                <button id="add-light">Adicionar Luz</button>
             </div>
          </div>
       </div>
 
-      
+      <script src="js/three.js"></script>
       <script src="js/initShaders.js"></script>
       <script src="js/gl-matrix-min.js"></script>
       <script src="js/app.js"></script>
