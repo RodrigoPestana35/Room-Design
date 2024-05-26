@@ -15,18 +15,29 @@ let yAxis = 1;
 let zAxis = 2;
 let axis = xAxis;
 
-let cameraPosition = vec3.fromValues(0,0,0);
-let speed = 0.001;   //velocidade do movimento da camera
+//let cameraPosition = vec3.fromValues(0,0,0);
+let speed = 0.05;   //velocidade do movimento da camera
 let viewMatrix = mat4.create();
 
-let keysPressed = {};
+let moveCamera = {
+    'w': false,
+    's': false,
+    'a': false,
+    'd': false,
+    'q': false,
+    'r': false
+};
 
 window.addEventListener('keydown', (event) => {
-    keysPressed[event.key] = true;
+    if (event.key in moveCamera) {
+        moveCamera[event.key] = true;
+    }
 });
 
 window.addEventListener('keyup', (event) => {
-    keysPressed[event.key] = false;
+    if (event.key in moveCamera) {
+        moveCamera[event.key] = false;
+    }
 });
 
 
@@ -186,43 +197,43 @@ function render() {
     // Clear the canvas
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+    // Reseta ctm a cada frame
+    ctm = mat4.create();
+
     // Verifica quais teclas estão pressionadas e move a câmera
-    if (keysPressed['w']) {
-        cameraPosition[2] -= speed;
+    if (moveCamera['w']) {
+        mat4.rotateX(viewMatrix, viewMatrix, speed);
     }
-    if (keysPressed['s']) {
-        cameraPosition[2] += speed;
+    if (moveCamera['s']) {
+        mat4.rotateX(viewMatrix, viewMatrix, -speed);
     }
-    if (keysPressed['a']) {
-        cameraPosition[0] -= speed;
+    if (moveCamera['a']) {
+        mat4.rotateY(viewMatrix, viewMatrix, speed);
     }
-    if (keysPressed['d']) {
-        cameraPosition[0] += speed;
+    if (moveCamera['d']) {
+        mat4.rotateY(viewMatrix, viewMatrix, -speed);
     }
-    if (keysPressed['q']) {
-        cameraPosition[1] -= speed;
+    if (moveCamera['q']) {
+        mat4.rotateZ(viewMatrix, viewMatrix, speed);
     }
-    if (keysPressed['r']) {
-        cameraPosition[1] += speed;
-    }
-
-    // Apply rotation
-    switch (axis) {
-        case xAxis:
-            mat4.rotateX(ctm, ctm, angle);
-            break;
-        case yAxis:
-            mat4.rotateY(ctm, ctm, angle);
-            break;
-        case zAxis:
-            mat4.rotateZ(ctm, ctm, angle);
-            break;
-        default:
-            return -1
+    if (moveCamera['r']) {
+        mat4.rotateZ(viewMatrix, viewMatrix, -speed);
     }
 
-    // Atualiza a matriz de visualização com a nova posição da câmera
-    mat4.lookAt(viewMatrix, cameraPosition, [0, 0, 0], [0, 1, 0]);
+    // // Apply rotation
+    // switch (axis) {
+    //     case xAxis:
+    //         mat4.rotateX(ctm, ctm, angle);
+    //         break;
+    //     case yAxis:
+    //         mat4.rotateY(ctm, ctm, angle);
+    //         break;
+    //     case zAxis:
+    //         mat4.rotateZ(ctm, ctm, angle);
+    //         break;
+    //     default:
+    //         return -1
+    // }
 
     // Atualiza a matriz ctm com a viewMatrix
     mat4.multiply(ctm, viewMatrix, ctm);
