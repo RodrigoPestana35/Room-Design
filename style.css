@@ -1,0 +1,25 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.canvas-container {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    width: 800px;
+    height: 800px;
+    position: relative;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.primitive-controls, .model-controls, .light-controls, .object-controls {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
