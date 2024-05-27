@@ -25,8 +25,6 @@ let posZ = [];
 let posY = [];
 let posX = [];
 
-let id = 0;
-
 let moveCamera = {
     'w': false,
     's': false,
@@ -39,31 +37,37 @@ let moveCamera = {
 let nPrimitivas = 0;
 
 window.addEventListener('keydown', (event) => {
-    console.log(event.key);
+
     if (event.key in moveCamera) {
         moveCamera[event.key] = true;
     }
     else{
-        switch (event.key) {
-           case'PageUp':
-                posY ++;
-                break;
-            case'PageDown':
-                posY --;
-                break;
-            case'ArrowUp':
-                posZ ++;
-                break;
-            case'ArrowDown':
-                posZ --;
-                break;
-            case'ArrowLeft':
-                posX --;
-                break;
-            case'ArrowRight':
-                posX ++;
-                break;
-            default:
+        if(objectToManipulate) {
+            let id = objectToManipulate.id;
+            console.log("id: "+objectToManipulate.id + " " +objectToManipulate.name);
+            switch (event.key) {
+                case'PageUp':
+                    posY[id]++;
+                    break;
+                case'PageDown':
+                    posY[id]--;
+                    break;
+                case'ArrowUp':
+                    posZ[id]++;
+                    break;
+                case'ArrowDown':
+                    posZ[id]--;
+                    break;
+                case'ArrowLeft':
+                    posX[id]--;
+                    console.log(id+ " arrow left : "+posX[id]);
+                    break;
+                case'ArrowRight':
+                    posX[id]++;
+                    break;
+                default:
+            }
+            console.log("2: " + posX);
         }
     }
 });
@@ -131,29 +135,35 @@ const addPrimitive = () => {
     if (valid && nPrimitivas < 10){
         switch (primitiveType) {
         case "cube":
-            console.log("cube");
             geometry = new THREE.BoxGeometry(width, height, depth);
             material = new THREE.MeshBasicMaterial({color: color});
             cube = new THREE.Mesh(geometry, material);
-            cube.name="cube "+id;
-            cube.id=id;
+            cube.name="cube "+cube.id;
+            //cube.id=Id;
+            console.log(cube.id);
             scene.add(cube);
             nPrimitivas++;
+            posX[cube.id]=0;
+            posY[cube.id]=0;
+            posZ[cube.id]=0;
             break;
         case "pyramid":
             console.log("pyramid");
             geometry = new THREE.ConeGeometry(width, height, 4);
             material = new THREE.MeshBasicMaterial({color: color});
             pyramid = new THREE.Mesh(geometry, material);
-            pyramid.name="pyramid";
+            pyramid.name="pyramid "+pyramid.id;
+            //pyramid.id = Id;
             scene.add(pyramid);
             nPrimitivas++;
+            posX[pyramid.id]=0;
+            posY[pyramid.id]=0;
+            posZ[pyramid.id]=0;
             break;
         default:
             return -1;
         }
     }
-    id++;
     updateObjectList();
 }
 
@@ -181,8 +191,9 @@ const addLight = () => {
 
 const render = () => {
     if (objectToManipulate !== undefined){
-        console.log(objectToManipulate.name + "asdas");
-        objectToManipulate.position.set(posX, posY, posZ);
+        let id = objectToManipulate.id;
+        console.log(objectToManipulate.name + " " + posX[id]);
+        objectToManipulate.position.set(posX[id], posY[id], posZ[id]);
     }
     renderer.render(scene, camera);
     requestAnimationFrame(render);
