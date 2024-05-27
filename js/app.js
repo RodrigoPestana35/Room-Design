@@ -21,9 +21,11 @@ let viewMatrix = mat4.create();
 
 let objectToManipulate;
 
-let posZ = 0
-let posY = 0;
-let posX = 0;
+let posZ = [];
+let posY = [];
+let posX = [];
+
+let id = 0;
 
 let moveCamera = {
     'w': false,
@@ -133,7 +135,8 @@ const addPrimitive = () => {
             geometry = new THREE.BoxGeometry(width, height, depth);
             material = new THREE.MeshBasicMaterial({color: color});
             cube = new THREE.Mesh(geometry, material);
-            cube.name="cube";
+            cube.name="cube "+id;
+            cube.id=id;
             scene.add(cube);
             nPrimitivas++;
             break;
@@ -150,6 +153,7 @@ const addPrimitive = () => {
             return -1;
         }
     }
+    id++;
     updateObjectList();
 }
 
