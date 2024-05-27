@@ -189,16 +189,16 @@ const render = () => {
     }
 
     if (moveCamera['w']) {
-        camera.position.z -= speed;
+        controls.moveForward(speed);
     }
     if (moveCamera['s']) {
-        camera.position.z += speed;
+        controls.moveForward(-speed);
     }
     if (moveCamera['a']) {
-        camera.position.x -= speed;
+        controls.moveRight(-speed);
     }
     if (moveCamera['d']) {
-        camera.position.x += speed;
+        controls.moveRight(speed);
     }
     if (moveCamera['q']) {
         camera.position.y -= speed;
@@ -208,7 +208,7 @@ const render = () => {
     }
 
     if (controls.isLocked) {
-        controls.update();  // Now this should work
+        //controls.update();
     }
 
     renderer.render(scene, camera);
