@@ -166,6 +166,26 @@ const render = () => {
         console.log(objectToManipulate.name + "asdas");
         objectToManipulate.position.set(arrowX, arrowY);
     }
+
+    if (moveCamera['w']) {
+        camera.position.z -= speed;
+    }
+    if (moveCamera['s']) {
+        camera.position.z += speed;
+    }
+    if (moveCamera['a']) {
+        camera.position.x -= speed;
+    }
+    if (moveCamera['d']) {
+        camera.position.x += speed;
+    }
+    if (moveCamera['q']) {
+        camera.position.y -= speed;
+    }
+    if (moveCamera['r']) {
+        camera.position.y += speed;
+    }
+
     renderer.render(scene, camera);
     requestAnimationFrame(render);
 }
