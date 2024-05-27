@@ -64,10 +64,16 @@ function init() {
     //*Camera pestana TODO
     const fov = 75;
     const near = 0.1;
-    const far = 5;
+    const far = 100;
     const aspect = canvas.width / canvas.height;
     camera = new THREE.PerspectiveCamera(fov,aspect,near,far);
-    camera.position.z = 3;
+    camera.position.x = 5;
+    camera.position.y = 5;
+    camera.position.z = 10;
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+    //** Setup room
+    setupRoom();
 
     // *** Render ***
     render();
@@ -130,4 +136,26 @@ const addLight = () => {
 const render = () => {
     renderer.render(scene, camera);
     requestAnimationFrame(render);
+}
+
+function setupRoom(){
+    console.log("SETUP ROOM");
+    const geometry = new THREE.PlaneGeometry(10,10);
+    const material1 = new THREE.MeshBasicMaterial({color: 0x00ff00});
+    const material2 = new THREE.MeshBasicMaterial({color: 0x0000ff});
+    const material3 = new THREE.MeshBasicMaterial({color: 0xffff00});
+
+    const wall1 = new THREE.Mesh(geometry, material1);
+    const wall2= new THREE.Mesh(geometry, material2);
+    const wall3= new THREE.Mesh(geometry, material3);
+    wall3.material.side = THREE.DoubleSide;
+    wall1.rotation.set(0,0, Math.PI/2);
+    wall2.rotation.set(0, Math.PI/2, 0);
+    wall3.rotation.set(Math.PI/2, 0, 0);
+    wall1.position.set(0,0,-5);
+    wall2.position.set(-5,0,0);
+    wall3.position.set(0,-5,0);
+    scene.add(wall1);
+    scene.add(wall2);
+    scene.add(wall3);
 }
