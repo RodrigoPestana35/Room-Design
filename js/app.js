@@ -20,8 +20,8 @@ let speed = 0.05;   //velocidade do movimento da camera
 let viewMatrix = mat4.create();
 
 let objectToManipulate;
-let arrowY = 0;
-let arrowX = 0;
+let posY = 0;
+let posX = 0;
 
 let moveCamera = {
     'w': false,
@@ -41,16 +41,16 @@ window.addEventListener('keydown', (event) => {
     else{
         switch (event.key) {
             case'ArrowUp':
-                arrowY ++;
+                posY ++;
                 break;
             case'ArrowDown':
-                arrowY --;
+                posY --;
                 break;
             case'ArrowLeft':
-                arrowX --;
+                posX --;
                 break;
             case'ArrowRight':
-                arrowX ++;
+                posX ++;
                 break;
             default:
         }
@@ -83,6 +83,9 @@ function init() {
     document.getElementById('adicionar-primitiva').addEventListener('click', addPrimitive);
     document.getElementById("add-light").addEventListener('click', addLight);
     document.getElementById("manipulate-object").addEventListener('click', manipulateObject);
+    document.getElementById("manipulation-modal").addEventListener('click', openModal);
+    document.getElementById("close").addEventListener('click', closeModal);
+    document.getElementById("remove-object").addEventListener('click', removeObject);
     //*Camera pestana TODO
     const fov = 75;
     const near = 0.1;
@@ -164,7 +167,7 @@ const addLight = () => {
 const render = () => {
     if (objectToManipulate !== undefined){
         console.log(objectToManipulate.name + "asdas");
-        objectToManipulate.position.set(arrowX, arrowY);
+        objectToManipulate.position.set(posX, posY);
     }
     renderer.render(scene, camera);
     requestAnimationFrame(render);
@@ -191,11 +194,33 @@ function setupRoom(){
     scene.add(wall2);
     scene.add(wall3)
 }
+
+const removeObject = () => {
+    scene.remove(objectToManipulate);
+    objectToManipulate = undefined;
+}
+
 const manipulateObject = () => {
     let objectList = document.getElementById("object-list");
     let objectName = objectList.value;
     objectToManipulate = scene.children.find(obj => obj.name == objectName);
     console.log(objectToManipulate.name+" found");
+}
+const openModal = () => {
+    let objectControls = document.querySelector(".object-controls");
+    let modal = document.getElementById("modal");
+    if(objectToManipulate !== undefined){
+        modal.style.display = "block";
+    }
+    else {
+        let p = document.createElement("p");
+        p.textContent = "Nenhum objecto selecionado";
+        objectControls.appendChild(p);
+    }
+}
+
+const closeModal = () => {
+    document.getElementById("modal").style.display = "none";
 }
 
 function updateObjectList(){
