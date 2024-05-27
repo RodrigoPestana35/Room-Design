@@ -78,6 +78,7 @@ function init() {
     // *** Render ***
     render();
 
+
 }
 
 const addPrimitive = () => {
@@ -92,16 +93,20 @@ const addPrimitive = () => {
     if (valid && nPrimitivas < 10){
         switch (primitiveType) {
         case "cube":
+            console.log("cube");
             geometry = new THREE.BoxGeometry(width, height, depth);
             material = new THREE.MeshBasicMaterial({color: color});
             cube = new THREE.Mesh(geometry, material);
+            cube.name="cube";
             scene.add(cube);
             nPrimitivas++;
             break;
         case "pyramid":
+            console.log("pyramid");
             geometry = new THREE.ConeGeometry(width, height, 4);
             material = new THREE.MeshBasicMaterial({color: color});
             pyramid = new THREE.Mesh(geometry, material);
+            pyramid.name="pyramid";
             scene.add(pyramid);
             nPrimitivas++;
             break;
@@ -109,6 +114,7 @@ const addPrimitive = () => {
             return -1;
         }
     }
+    updateObjectList();
 }
 
 const addLight = () => {
@@ -157,5 +163,21 @@ function setupRoom(){
     wall3.position.set(0,-5,0);
     scene.add(wall1);
     scene.add(wall2);
-    scene.add(wall3);
+    scene.add(wall3)
+}
+
+function updateObjectList(){
+    let objectList = document.getElementById("object-list");
+    objectList.innerHTML = "";
+    let n = 0;
+    scene.children.forEach(obj=>{
+        if(obj.name !== "") {
+            console.log(obj.toString());
+            const option = document.createElement("option");
+            option.value = obj.name;
+            option.textContent = obj.name;
+            objectList.appendChild(option);
+            n++;
+        }
+    })
 }
