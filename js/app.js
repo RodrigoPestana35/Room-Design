@@ -96,6 +96,7 @@ function init() {
     document.getElementById("close").addEventListener('click', closeModal);
     document.getElementById("remove-object").addEventListener('click', removeObject);
     document.getElementById("change-dimension").addEventListener('click', changeDimension);
+    document.getElementById("change-texture").addEventListener('click', changeTexture);
     //*Camera pestana TODO
     const fov = 75;
     const near = 0.1;
@@ -208,6 +209,30 @@ function setupRoom(){
 const removeObject = () => {
     scene.remove(objectToManipulate);
     objectToManipulate = undefined;
+    closeModal();
+    updateObjectList();
+}
+
+const changeTexture = () =>{
+    let input = document.getElementById("input-texture");
+    let error = document.getElementById("error");
+    error.innerText="";
+    if(input.files.length==0){
+        error.innerText = "Nenhuma Textura Selecionada";
+    } else {
+        let file = input.files[0];
+        let reader = new FileReader();
+
+        reader.onload = function(event) {
+            let img = event.target.result;
+            const loader = new THREE.TextureLoader();
+            objectToManipulate.material = new THREE.MeshBasicMaterial({map: loader.load(img)});
+            objectToManipulate.material.needsUpdate = true;
+        };
+
+       reader.readAsDataURL(file);
+    }
+    closeModal();
 }
 
 const changeDimension = () => {
@@ -218,6 +243,7 @@ const changeDimension = () => {
         console.log("valid");
         objectToManipulate.scale.set(x, y, z);
     }
+    closeModal();
 }
 
 const manipulateObject = () => {
@@ -227,8 +253,12 @@ const manipulateObject = () => {
     console.log(objectToManipulate.name+" found");
 }
 const openModal = () => {
+    let input = document.getElementById("input-texture");
     let objectControls = document.querySelector(".object-controls");
     let modal = document.getElementById("modal");
+    let error = document.getElementById("error");
+    error.innerText="";
+    input.value = "";
     if(objectToManipulate !== undefined){
         modal.style.display = "block";
     }
@@ -240,6 +270,7 @@ const openModal = () => {
 }
 
 const closeModal = () => {
+    document.getElementById("input-texture").value="";
     document.getElementById("modal").style.display = "none";
 }
 
