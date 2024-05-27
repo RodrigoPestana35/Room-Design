@@ -207,6 +207,10 @@ const render = () => {
         camera.position.y += speed;
     }
 
+    if (controls.isLocked) {
+        controls.update();  // Now this should work
+    }
+
     renderer.render(scene, camera);
     requestAnimationFrame(render);
 }
