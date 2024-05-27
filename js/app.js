@@ -101,7 +101,7 @@ function init() {
     controls = new PointerLockControls(camera, document.body);
     scene.add(controls.getObject());
 
-    document.addEventListener('click', function () {
+    canvas.addEventListener('click', function () {
         controls.lock();
     }, false);
 
