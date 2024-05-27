@@ -87,7 +87,7 @@ function init() {
     document.getElementById('adicionar-primitiva').addEventListener('click', addPrimitive);
     document.getElementById("add-light").addEventListener('click', addLight);
     document.getElementById("manipulate-object").addEventListener('click', manipulateObject);
-    //*Camera pestana TODO
+    //*Camera
     const fov = 75;
     const near = 0.1;
     const far = 100;
@@ -98,18 +98,24 @@ function init() {
     camera.position.z = 10;
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 
+    //** PointerLockControls
     controls = new PointerLockControls(camera, document.body);
     scene.add(controls.getObject());
 
+    //** Add event listeners to the canvas
     canvas.addEventListener('click', function () {
         controls.lock();
+        console.log("click");
     }, false);
 
+    //** Add event listeners to the document to check if the pointer is locked
     document.addEventListener('pointerlockchange', function () {
         if (document.pointerLockElement === document.body) {
             controls.enabled = true;
+            console.log("Pointer locked");
         } else {
             controls.enabled = false;
+            console.log("Pointer unlocked");
         }
     }, false);
 
@@ -188,6 +194,7 @@ const render = () => {
         objectToManipulate.position.set(arrowX, arrowY);
     }
 
+    // Camera movement
     if (moveCamera['w']) {
         controls.moveForward(speed);
     }
@@ -205,10 +212,6 @@ const render = () => {
     }
     if (moveCamera['r']) {
         camera.position.y += speed;
-    }
-
-    if (controls.isLocked) {
-        //controls.update();
     }
 
     renderer.render(scene, camera);
