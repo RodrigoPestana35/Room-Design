@@ -1,6 +1,5 @@
 import * as THREE from './three.module.js';
 import {PointerLockControls} from './PointerLockControls.js';
-
 // *** Global variables ***
 let camera, scene, renderer, geometry, material, cube, pyramid, light, controls;
 
@@ -120,6 +119,12 @@ const addPrimitive = () => {
     let width = document.getElementById('primitive-width').value;
     let depth = document.getElementById('primitive-depth').value;
     let color = document.getElementById('primitive-color').value;
+    let x = document.getElementById('prim-position-x').value;
+    let y = document.getElementById('prim-position-y').value;
+    let z = document.getElementById('prim-position-z').value;
+    let rotationx = document.getElementById('prim-direction-x').value;
+    let rotationy = document.getElementById('prim-direction-y').value;
+    let rotationz = document.getElementById('prim-direction-z').value;
 
     let valid;
     valid = primitiveType && height && width && depth && color;
@@ -129,18 +134,22 @@ const addPrimitive = () => {
         case "cube":
             console.log("cube");
             geometry = new THREE.BoxGeometry(width, height, depth);
-            material = new THREE.MeshBasicMaterial({color: color});
+            material = new THREE.MeshPhongMaterial({color: color});
             cube = new THREE.Mesh(geometry, material);
             cube.name="cube";
+            cube.position.set(x,y,z);
+            cube.rotation.set(rotationx,rotationy,rotationz);
             scene.add(cube);
             nPrimitivas++;
             break;
         case "pyramid":
             console.log("pyramid");
             geometry = new THREE.ConeGeometry(width, height, 4);
-            material = new THREE.MeshBasicMaterial({color: color});
+            material = new THREE.MeshPhongMaterial({color: color});
             pyramid = new THREE.Mesh(geometry, material);
             pyramid.name="pyramid";
+            pyramid.position.set(x,y,z);
+            pyramid.rotation.set(rotationx,rotationy,rotationz);
             scene.add(pyramid);
             nPrimitivas++;
             break;
@@ -160,17 +169,32 @@ const addLight = () => {
     let directiony = document.getElementById("light-direction-y").value;
     let directionz = document.getElementById("light-direction-z").value;
     let color = document.getElementById("light-color").value;
+    let lighttype = document.getElementById("light-type").value;
+    let intensity = document.getElementById("light-intensity").value;
 
-    let valid;
-    valid = x && y && z && directionx && directiony && directionz && color;
-
-    if(valid){
-        light = new THREE.DirectionalLight(color, 1);
-        light.position.set(x,y,z);
-        light.target.position.set(directionx,directiony,directionz);
-        scene.add(light.target);
-        scene.add(light);
-        console.log("aldka");
+    switch(lighttype){
+        case "ambient":
+            light = new THREE.AmbientLight(color, intensity);
+            scene.add(light);
+            break;
+        case "directional":
+            light = new THREE.DirectionalLight(color, intensity);
+            light.castShadow = true;
+            light.position.set(x,y,z);
+            light.target.position.set(directionx,directiony,directionz);
+            var lightHelper = new THREE.DirectionalLightHelper(light,0.2,0x000000);
+            scene.add(lightHelper);
+            scene.add(light.target);
+            scene.add(light);
+            break;
+        case "point":
+            light = new THREE.PointLight(color, intensity, 20, 0.1);
+            light.castShadow = true;
+            light.position.set(x,y,z);
+            var lightHelper = new THREE.PointLightHelper(light,0.2,0x000000);
+            scene.add(lightHelper);
+            scene.add(light);
+            break;
     }
 }
 
@@ -207,13 +231,22 @@ const render = () => {
 function setupRoom(){
     console.log("SETUP ROOM");
     const geometry = new THREE.PlaneGeometry(10,10);
-    const material1 = new THREE.MeshBasicMaterial({color: 0x00ff00});
-    const material2 = new THREE.MeshBasicMaterial({color: 0x0000ff});
-    const material3 = new THREE.MeshBasicMaterial({color: 0xffff00});
-
+    const material1 = new THREE.MeshPhongMaterial({color: 0xffffff});
+    const material2 = new THREE.MeshPhongMaterial({color: 0xffffff});
+    const material3 = new THREE.MeshPhongMaterial({color: 0xd2b48c});
     const wall1 = new THREE.Mesh(geometry, material1);
     const wall2= new THREE.Mesh(geometry, material2);
     const wall3= new THREE.Mesh(geometry, material3);
+
+    const pl = new THREE.PointLight(0xffffff, 3, 20,0.1);
+    pl.castShadow = true;
+    pl.position.set(0,5,0);
+    const plHelper = new THREE.PointLightHelper(pl,0.2, 0x000000);
+    scene.add(pl);
+    scene.add(plHelper);
+
+    wall1.material.side = THREE.DoubleSide;
+    wall2.material.side = THREE.DoubleSide;
     wall3.material.side = THREE.DoubleSide;
     wall1.rotation.set(0,0, Math.PI/2);
     wall2.rotation.set(0, Math.PI/2, 0);
