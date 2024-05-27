@@ -1,11 +1,14 @@
+import * as THREE from './three.module.js';
 let pointsArray = [];
 let texCoordsArray = [];
-
+let ola;
 let gl;
 let ctm;
 let modelViewMatrix;
 
 let program;
+
+let camera, scene, renderer, geometry, material, cube, pyramid, light;
 
 const angle = 0.02; // rotation in radians
 
@@ -17,7 +20,7 @@ let axis = xAxis;
 
 //let cameraPosition = vec3.fromValues(0,0,0);
 let speed = 0.05;   //velocidade do movimento da camera
-let viewMatrix = mat4.create();
+//let viewMatrix = mat4.create();
 
 let objectToManipulate;
 let arrowY = 0;
@@ -110,6 +113,7 @@ const addPrimitive = () => {
     let depth = document.getElementById('primitive-depth').value;
     let color = document.getElementById('primitive-color').value;
 
+    let valid;
     valid = primitiveType && height && width && depth && color;
 
     if (valid && nPrimitivas < 10){
@@ -149,6 +153,7 @@ const addLight = () => {
     let directionz = document.getElementById("light-direction-z").value;
     let color = document.getElementById("light-color").value;
 
+    let valid;
     valid = x && y && z && directionx && directiony && directionz && color;
 
     if(valid){
