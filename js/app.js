@@ -1,4 +1,5 @@
 import * as THREE from './three.module.js';
+import {PointerLockControls} from './PointerLockControls.js';
 let pointsArray = [];
 let texCoordsArray = [];
 let ola;
@@ -8,7 +9,7 @@ let modelViewMatrix;
 
 let program;
 
-let camera, scene, renderer, geometry, material, cube, pyramid, light;
+let camera, scene, renderer, geometry, material, cube, pyramid, light, controls;
 
 const angle = 0.02; // rotation in radians
 
@@ -96,6 +97,21 @@ function init() {
     camera.position.y = 5;
     camera.position.z = 10;
     camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+    controls = new PointerLockControls(camera, document.body);
+    scene.add(controls.getObject());
+
+    document.addEventListener('click', function () {
+        controls.lock();
+    }, false);
+
+    document.addEventListener('pointerlockchange', function () {
+        if (document.pointerLockElement === document.body) {
+            controls.enabled = true;
+        } else {
+            controls.enabled = false;
+        }
+    }, false);
 
     //** Setup room
     setupRoom();
