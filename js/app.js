@@ -1,32 +1,18 @@
 import * as THREE from './three.module.js';
 import {PointerLockControls} from './PointerLockControls.js';
-let pointsArray = [];
-let texCoordsArray = [];
-let ola;
-let gl;
-let ctm;
-let modelViewMatrix;
 
-let program;
-
+// *** Global variables ***
 let camera, scene, renderer, geometry, material, cube, pyramid, light, controls;
 
-const angle = 0.02; // rotation in radians
-
-// constants for rotating
-let xAxis = 0;
-let yAxis = 1;
-let zAxis = 2;
-let axis = xAxis;
-
-//let cameraPosition = vec3.fromValues(0,0,0);
+// *** Camera movement speed ***
 let speed = 0.05;   //velocidade do movimento da camera
-//let viewMatrix = mat4.create();
 
+// *** Object to manipulate ***
 let objectToManipulate;
 let arrowY = 0;
 let arrowX = 0;
 
+// *** Camera movement list ***
 let moveCamera = {
     'w': false,
     's': false,
