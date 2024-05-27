@@ -20,6 +20,8 @@ let speed = 0.05;   //velocidade do movimento da camera
 let viewMatrix = mat4.create();
 
 let objectToManipulate;
+
+let posZ = 0
 let posY = 0;
 let posX = 0;
 
@@ -35,16 +37,23 @@ let moveCamera = {
 let nPrimitivas = 0;
 
 window.addEventListener('keydown', (event) => {
+    console.log(event.key);
     if (event.key in moveCamera) {
         moveCamera[event.key] = true;
     }
     else{
         switch (event.key) {
-            case'ArrowUp':
+           case'PageUp':
                 posY ++;
                 break;
-            case'ArrowDown':
+            case'PageDown':
                 posY --;
+                break;
+            case'ArrowUp':
+                posZ ++;
+                break;
+            case'ArrowDown':
+                posZ --;
                 break;
             case'ArrowLeft':
                 posX --;
@@ -86,6 +95,7 @@ function init() {
     document.getElementById("manipulation-modal").addEventListener('click', openModal);
     document.getElementById("close").addEventListener('click', closeModal);
     document.getElementById("remove-object").addEventListener('click', removeObject);
+    document.getElementById("change-dimension").addEventListener('click', changeDimension);
     //*Camera pestana TODO
     const fov = 75;
     const near = 0.1;
@@ -167,7 +177,7 @@ const addLight = () => {
 const render = () => {
     if (objectToManipulate !== undefined){
         console.log(objectToManipulate.name + "asdas");
-        objectToManipulate.position.set(posX, posY);
+        objectToManipulate.position.set(posX, posY, posZ);
     }
     renderer.render(scene, camera);
     requestAnimationFrame(render);
@@ -198,6 +208,16 @@ function setupRoom(){
 const removeObject = () => {
     scene.remove(objectToManipulate);
     objectToManipulate = undefined;
+}
+
+const changeDimension = () => {
+    let x = document.getElementById('new-x').value;
+    let y = document.getElementById('new-y').value;
+    let z = document.getElementById('new-z').value;
+    if(x && y && z){
+        console.log("valid");
+        objectToManipulate.scale.set(x, y, z);
+    }
 }
 
 const manipulateObject = () => {
