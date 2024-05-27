@@ -238,12 +238,15 @@ function setupRoom(){
     const wall2= new THREE.Mesh(geometry, material2);
     const wall3= new THREE.Mesh(geometry, material3);
 
-    const pl = new THREE.PointLight(0xffffff, 3, 20,0.1);
+    const pl = new THREE.PointLight(0xffffff, 2, 20,0.1);
     pl.castShadow = true;
     pl.position.set(0,5,0);
     const plHelper = new THREE.PointLightHelper(pl,0.2, 0x000000);
     scene.add(pl);
     scene.add(plHelper);
+
+    const al = new THREE.AmbientLight(0xffffff, 0.2);
+    scene.add(al);
 
     wall1.material.side = THREE.DoubleSide;
     wall2.material.side = THREE.DoubleSide;
