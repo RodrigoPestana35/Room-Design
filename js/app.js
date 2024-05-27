@@ -19,6 +19,10 @@ let axis = xAxis;
 let speed = 0.05;   //velocidade do movimento da camera
 let viewMatrix = mat4.create();
 
+let objectToManipulate;
+let arrowY = 0;
+let arrowX = 0;
+
 let moveCamera = {
     'w': false,
     's': false,
@@ -33,6 +37,23 @@ let nPrimitivas = 0;
 window.addEventListener('keydown', (event) => {
     if (event.key in moveCamera) {
         moveCamera[event.key] = true;
+    }
+    else{
+        switch (event.key) {
+            case'ArrowUp':
+                arrowY ++;
+                break;
+            case'ArrowDown':
+                arrowY --;
+                break;
+            case'ArrowLeft':
+                arrowX --;
+                break;
+            case'ArrowRight':
+                arrowX ++;
+                break;
+            default:
+        }
     }
 });
 
@@ -61,6 +82,7 @@ function init() {
     //Get button listeners
     document.getElementById('adicionar-primitiva').addEventListener('click', addPrimitive);
     document.getElementById("add-light").addEventListener('click', addLight);
+    document.getElementById("manipulate-object").addEventListener('click', manipulateObject);
     //*Camera pestana TODO
     const fov = 75;
     const near = 0.1;
@@ -140,6 +162,10 @@ const addLight = () => {
 }
 
 const render = () => {
+    if (objectToManipulate !== undefined){
+        console.log(objectToManipulate.name + "asdas");
+        objectToManipulate.position.set(arrowX, arrowY);
+    }
     renderer.render(scene, camera);
     requestAnimationFrame(render);
 }
@@ -165,19 +191,23 @@ function setupRoom(){
     scene.add(wall2);
     scene.add(wall3)
 }
+const manipulateObject = () => {
+    let objectList = document.getElementById("object-list");
+    let objectName = objectList.value;
+    objectToManipulate = scene.children.find(obj => obj.name == objectName);
+    console.log(objectToManipulate.name+" found");
+}
 
 function updateObjectList(){
     let objectList = document.getElementById("object-list");
     objectList.innerHTML = "";
-    let n = 0;
+    objectList.value = "";
     scene.children.forEach(obj=>{
         if(obj.name !== "") {
-            console.log(obj.toString());
             const option = document.createElement("option");
             option.value = obj.name;
             option.textContent = obj.name;
             objectList.appendChild(option);
-            n++;
         }
     })
 }
