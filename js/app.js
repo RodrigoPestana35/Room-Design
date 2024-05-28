@@ -34,7 +34,6 @@ window.addEventListener('keydown', (event) => {
     else{
         if(objectToManipulate) {
             let id = objectToManipulate.id;
-            console.log("id: "+objectToManipulate.id + " " +objectToManipulate.name);
             switch (event.key) {
                 case'PageUp':
                     posY[id]++;
@@ -50,14 +49,12 @@ window.addEventListener('keydown', (event) => {
                     break;
                 case'ArrowLeft':
                     posX[id]--;
-                    console.log(id+ " arrow left : "+posX[id]);
                     break;
                 case'ArrowRight':
                     posX[id]++;
                     break;
                 default:
             }
-            console.log("2: " + posX);
         }
     }
 });
@@ -89,15 +86,14 @@ function init() {
     document.getElementById("add-light").addEventListener('click', addLight);
     document.getElementById("manipulate-object").addEventListener('click', manipulateObject);
     document.getElementById("add-model").addEventListener('click', addModel);
-
-    //*Camera
     document.getElementById("manipulation-modal").addEventListener('click', openModal);
     document.getElementById("close").addEventListener('click', closeModal);
     document.getElementById("remove-object").addEventListener('click', removeObject);
     document.getElementById("change-dimension").addEventListener('click', changeDimension);
     document.getElementById("change-texture").addEventListener('click', changeTexture);
     document.getElementById("change-rotation").addEventListener('click', changeRotation);
-    //*Camera pestana TODO
+
+    //*Camera
     const fov = 75;
     const near = 0.1;
     const far = 100;
@@ -157,15 +153,12 @@ const addPrimitive = () => {
     if (valid && nPrimitivas < 10 && (x,y,z >= -5) && (x,y,z <= 5)){
         switch (primitiveType) {
         case "cube":
-            console.log("cube");
             geometry = new THREE.BoxGeometry(width, height, depth);
             material = new THREE.MeshPhongMaterial({color: color});
             cube = new THREE.Mesh(geometry, material);
             cube.position.set(x,y,z);
             cube.rotation.set(rotationx,rotationy,rotationz);
             cube.name="cube "+nPrimitivas;
-            //cube.id=Id;
-            console.log(cube.id);
             scene.add(cube);
             nPrimitivas++;
             posX[cube.id]=0;
@@ -173,14 +166,12 @@ const addPrimitive = () => {
             posZ[cube.id]=0;
             break;
         case "pyramid":
-            console.log("pyramid");
             geometry = new THREE.ConeGeometry(width, height, 4);
             material = new THREE.MeshPhongMaterial({color: color});
             pyramid = new THREE.Mesh(geometry, material);
             pyramid.position.set(x,y,z);
             pyramid.rotation.set(rotationx,rotationy,rotationz);
             pyramid.name="pyramid "+nPrimitivas;
-            //pyramid.id = Id;
             scene.add(pyramid);
             nPrimitivas++;
             posX[pyramid.id]=0;
@@ -315,7 +306,6 @@ function addModel(){
 const render = () => {
     if (objectToManipulate !== undefined){
         let id = objectToManipulate.id;
-        console.log(objectToManipulate.id + " " + posX[id]);
         objectToManipulate.position.set(posX[id], posY[id], posZ[id]);
     }
 
@@ -389,7 +379,6 @@ const changeRotation = () =>{
     let y = document.getElementById('new-rotation-y').value;
     let z = document.getElementById('new-rotation-z').value;
     if(x && y && z){
-        console.log("valid");
         objectToManipulate.rotation.x=x;
         objectToManipulate.rotation.y=y;
         objectToManipulate.rotation.z=z;
@@ -400,7 +389,6 @@ const changeRotation = () =>{
 const changeTexture = () =>{
     let input = document.getElementById("input-texture");
     let error = document.getElementById("error");
-    console.log("asdasdas");
     error.innerText="";
     if(input.files.length==0){
         error.innerText = "Nenhuma Textura Selecionada";
@@ -422,10 +410,9 @@ const changeTexture = () =>{
                     });
                 }
             });
-
-            /*objectToManipulate.material = new THREE.MeshBasicMaterial({map: loader.load(img)});
-            objectToManipulate.material.needsUpdate = true;
-            console.log("2asdasdas "+objectToManipulate + " " + objectToManipulate.material);*/
+            loader.onerror = function(event) {
+                console.error("An error occurred reading the file:", event);
+            };
         };
 
        reader.readAsDataURL(file);
@@ -438,7 +425,6 @@ const changeDimension = () => {
     let y = document.getElementById('new-y').value;
     let z = document.getElementById('new-z').value;
     if(x && y && z){
-        console.log("valid");
         objectToManipulate.scale.set(x, y, z);
     }
     closeModal();
@@ -448,7 +434,6 @@ const manipulateObject = () => {
     let objectList = document.getElementById("object-list");
     let objectName = objectList.value;
     objectToManipulate = scene.children.find(obj => obj.name == objectName);
-    console.log(objectToManipulate.name+" found");
 }
 const openModal = () => {
     let input = document.getElementById("input-texture");
