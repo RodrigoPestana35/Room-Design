@@ -26,6 +26,9 @@ let moveCamera = {
 let nPrimitivas = 0;
 let nModels = 0;
 
+/**
+ * Function that listens to the keydown event and changes the moveCamera list.
+ */
 window.addEventListener('keydown', (event) => {
     if (event.key in moveCamera) {
         moveCamera[event.key] = true;
@@ -70,13 +73,18 @@ window.addEventListener('keydown', (event) => {
     }
 });
 
+/**
+ * Function that listens to the keyup event and changes the moveCamera list.
+ */
 window.addEventListener('keyup', (event) => {
     if (event.key in moveCamera) {
         moveCamera[event.key] = false;
     }
 });
 
-
+/**
+ * Function that listens to the mousemove event and changes the camera direction.
+ */
 window.onload = function () {
     init();
 }
@@ -355,6 +363,9 @@ const addLight = () => {
     }
 }
 
+/**
+ * Function that is tied to button listener. Adds models to the canvas.
+ */
 function addModel(){
     console.log("Add model");
     if (nModels >= 5){
