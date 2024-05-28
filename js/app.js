@@ -210,9 +210,10 @@ const addPrimitive = () => {
                 cube.name="cube "+nPrimitivas;
                 scene.add(cube);
                 nPrimitivas++;
-                posX[cube.id]=0;
-                posY[cube.id]=0;
-                posZ[cube.id]=0;
+                posX[cube.id]=x;
+                posY[cube.id]=y;
+                posZ[cube.id]=z;
+                updateObjectList();
             }  else if (materialType == "tex") {
                 //Cube creator that uses option textures
                 let input = document.getElementById("prim-texture");
@@ -233,17 +234,18 @@ const addPrimitive = () => {
                             cube.name="cube "+nPrimitivas;
                             scene.add(cube);
                             nPrimitivas++;
-                            posX[cube.id]=0;
-                            posY[cube.id]=0;
-                            posZ[cube.id]=0;
-                        });
+                            posX[cube.id]=x;
+                            posY[cube.id]=y;
+                            posZ[cube.id]=z;
+                            updateObjectList();
+                        })
 
                         loader.onerror = function(event) {
                             console.error("An error occurred reading the file:", event);
-                        };
-                    };
+                        }
+                    }
                     reader.readAsDataURL(file);
-                };
+                }
             }
             break;
         case "pyramid":
@@ -257,9 +259,10 @@ const addPrimitive = () => {
                 pyramid.name="pyramid "+nPrimitivas;
                 scene.add(pyramid);
                 nPrimitivas++;
-                posX[pyramid.id]=0;
-                posY[pyramid.id]=0;
-                posZ[pyramid.id]=0;
+                posX[pyramid.id]=x;
+                posY[pyramid.id]=y;
+                posZ[pyramid.id]=z;
+                updateObjectList();
             }  else if (materialType == "tex") {
                 //Pyramid creation that uses option texture
                 let input = document.getElementById("prim-texture");
@@ -280,24 +283,24 @@ const addPrimitive = () => {
                             pyramid.name="pyramid "+nPrimitivas;
                             scene.add(pyramid);
                             nPrimitivas++;
-                            posX[pyramid.id]=0;
-                            posY[pyramid.id]=0;
-                            posZ[pyramid.id]=0;
-                        });
+                            posX[pyramid.id]=x;
+                            posY[pyramid.id]=y;
+                            posZ[pyramid.id]=z;
+                            updateObjectList();
+                        })
 
                         loader.onerror = function(event) {
                             console.error("An error occurred reading the file:", event);
-                        };
-                    };
+                        }
+                    }
                     reader.readAsDataURL(file);
-                };
+                }
             }
             break;
         default:
             return -1;
         }
     }
-    updateObjectList();
 }
 
 /**
@@ -407,9 +410,9 @@ function addModel(){
         scene.add(object);
         nModels++;
         updateObjectList();
-        posX[id] = 0;
-        posY[id] = 0;
-        posZ[id] = 0;
+        posX[id] = positionX;
+        posY[id] = positionY;
+        posZ[id] = positionZ;
     };
 
     reader.onerror = function(event) {
@@ -559,7 +562,6 @@ const manipulateObject = () => {
     let objectName = objectList.value;
     if(objectName) {
         objectToManipulate = scene.children.find(obj =>  obj.name === objectName && (obj.type === 'Mesh' || obj.type === 'Group'));
-        //objectToManipulate = scene.children.find(obj =>  obj.name === objectName);
     }
     console.log(objectToManipulate);
 
