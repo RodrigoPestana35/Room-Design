@@ -103,6 +103,7 @@ function init() {
     document.getElementById("remove-object").addEventListener('click', removeObject);
     document.getElementById("change-dimension").addEventListener('click', changeDimension);
     document.getElementById("change-texture").addEventListener('click', changeTexture);
+    document.getElementById("change-rotation").addEventListener('click', changeRotation);
     //*Camera pestana TODO
     const fov = 75;
     const near = 0.1;
@@ -138,7 +139,7 @@ const addPrimitive = () => {
             geometry = new THREE.BoxGeometry(width, height, depth);
             material = new THREE.MeshBasicMaterial({color: color});
             cube = new THREE.Mesh(geometry, material);
-            cube.name="cube "+cube.id;
+            cube.name="cube "+nPrimitivas;
             //cube.id=Id;
             console.log(cube.id);
             scene.add(cube);
@@ -152,7 +153,7 @@ const addPrimitive = () => {
             geometry = new THREE.ConeGeometry(width, height, 4);
             material = new THREE.MeshBasicMaterial({color: color});
             pyramid = new THREE.Mesh(geometry, material);
-            pyramid.name="pyramid "+pyramid.id;
+            pyramid.name="pyramid "+nPrimitivas;
             //pyramid.id = Id;
             scene.add(pyramid);
             nPrimitivas++;
@@ -226,6 +227,19 @@ const removeObject = () => {
     objectToManipulate = undefined;
     closeModal();
     updateObjectList();
+}
+
+const changeRotation = () =>{
+    let x = document.getElementById('new-rotation-x').value;
+    let y = document.getElementById('new-rotation-y').value;
+    let z = document.getElementById('new-rotation-z').value;
+    if(x && y && z){
+        console.log("valid");
+        objectToManipulate.rotation.x=x;
+        objectToManipulate.rotation.y=y;
+        objectToManipulate.rotation.z=z;
+    }
+    closeModal();
 }
 
 const changeTexture = () =>{
