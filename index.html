@@ -107,7 +107,39 @@
                <select id="object-list">
                   <option value="">Selecionar um Objeto</option>
                </select>
-               <button id="manipulate-object">Manipular Objeto</button>
+               <button id="manipulate-object">Selecionar Objeto</button>
+               <button id="manipulation-modal">Manipular Objeto</button>
+            </div>
+            <div id="modal" class="modal">
+               <div class="modal-content">
+                  <span id="close" class="close">
+                     <button>&times;</button>
+                  </span><br><br>
+                  <button id="remove-object">Apagar Objeto</button><br>
+                  <p>Alterar Dimensoes</p>
+                  <label for="new-x"> X:</label>
+                  <input type="number" id="new-x">
+                  <label for="new-y">Y:</label>
+                  <input type="number" id="new-y">
+                  <label for="new-z">Z:</label>
+                  <input type="number" id="new-z">
+                  <button id="change-dimension">Aplicar</button><br>
+
+                  <p>Alterar Rotacao</p>
+                  <label for="new-rotation-x"> X:</label>
+                  <input type="number" id="new-rotation-x">
+                  <label for="new-rotation-y">Y:</label>
+                  <input type="number" id="new-rotation-y">
+                  <label for="new-rotation-z">Z:</label>
+                  <input type="number" id="new-rotation-z">
+                  <button id="change-rotation">Aplicar</button><br>
+
+                  <p>Alterar Textura</p>
+                  <label for="input-texture"> Textura: </label>
+                  <input type="file" id="input-texture" accept=".jpg, .jpeg. .png">
+                  <button id="change-texture">Aplicar</button><br>
+                  <div id="error"></div>
+               </div>
             </div>
             <div class="light-controls">
                <label for="light-intensity">Intensidade:</label>

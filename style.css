@@ -45,3 +45,20 @@ button {
     background-color: blue;
     cursor: pointer;
 }
+.modal {
+    padding: 10px;
+    display: none;
+    position: fixed;
+    height: 75%;
+    width: 50%;
+    margin: auto;
+    top: 12.5%;
+    left: 25%;
+    bottom: 0;
+    background-color: rgb(255,255,255);
+    border-style: solid;
+    border-color: black;
+}
+.close button{
+    width: 25px;
+}
