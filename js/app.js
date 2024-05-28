@@ -230,6 +230,11 @@ function addModel(){
         let colorInput = document.getElementById("model-color");
         let textureInput = document.getElementById("model-texture");
 
+        if((positionX, positionY, positionZ) <=-5 || (positionX, positionY, positionZ) >= 5){
+            console.log("Posição inválida");
+            return;
+        }
+
         const loader = new OBJLoader();
 
         let object = loader.parse(contents);
