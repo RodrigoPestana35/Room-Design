@@ -1,5 +1,6 @@
 import * as THREE from './three.module.js';
 import {PointerLockControls} from './PointerLockControls.js';
+import {OBJLoader} from "./OBJLoader.js";
 // *** Global variables ***
 let camera, scene, renderer, geometry, material, cube, pyramid, light, controls;
 
@@ -128,6 +129,7 @@ function init() {
     document.getElementById('adicionar-primitiva').addEventListener('click', addPrimitive);
     document.getElementById("add-light").addEventListener('click', addLight);
     document.getElementById("manipulate-object").addEventListener('click', manipulateObject);
+    document.getElementById("add-model").addEventListener('click', addModel);
 
     //*Camera
     const fov = 75;
@@ -250,6 +252,81 @@ const addLight = () => {
             scene.add(light);
             break;
     }
+}
+
+function addModel(){
+    console.log("Add model");
+    if (nModels >= 5){
+        console.log("Maximo de modelos atingido");
+        return;
+    }
+    let files = document.getElementById("model-file").files;
+    if (files.length === 0){
+        console.log("Nenhum arquivo selecionado");
+        return;
+    }
+    let file = files[0];
+    let reader = new FileReader();
+
+    reader.onload = function(event) {
+        let contents = event.target.result;
+
+        let positionX = parseFloat(document.getElementById("model-position-x").value) || 0;
+        let positionY = parseFloat(document.getElementById("model-position-y").value) || 0;
+        let positionZ = parseFloat(document.getElementById("model-position-z").value) || 0;
+        let rotationX = parseFloat(document.getElementById("model-direction-x").value) || 0;
+        let rotationY = parseFloat(document.getElementById("model-direction-y").value) || 0;
+        let rotationZ = parseFloat(document.getElementById("model-direction-z").value) || 0;
+        let scale = parseFloat(document.getElementById("model-scale").value) || 1;
+        let materialType = document.querySelector('input[name="material"]:checked').value;
+        let colorInput = document.getElementById("model-color");
+        let textureInput = document.getElementById("model-texture");
+
+        if((positionX, positionY, positionZ) <=-5 || (positionX, positionY, positionZ) >= 5){
+            console.log("Posição inválida");
+            return;
+        }
+
+        const loader = new OBJLoader();
+
+        let object = loader.parse(contents);
+        object.name = "model" + nModels;
+        object.position.set(positionX, positionY, positionZ);
+        object.rotation.set(rotationX, rotationY, rotationZ);
+        object.scale.set(scale, scale, scale);
+        if (materialType === "color") {
+            let color = new THREE.Color(colorInput.value);
+            object.traverse(child => {
+                if (child instanceof THREE.Mesh) {
+                    child.material.color = color;
+                }
+            });
+        }
+        else if (materialType === "texture" && textureInput.files.length > 0) {
+            let textureFile = textureInput.files[0];
+            let textureReader = new FileReader();
+
+            textureReader.onload = function(textureEvent) {
+                let texture = new THREE.TextureLoader().load(textureEvent.target.result);
+                object.traverse(function (child) {
+                    if (child instanceof THREE.Mesh) {
+                        child.material = new THREE.MeshBasicMaterial({ map: texture });
+                    }
+                });
+            };
+
+            textureReader.readAsDataURL(textureFile);
+        }
+        scene.add(object);
+        nModels++;
+    };
+
+    reader.onerror = function(event) {
+        console.error("An error occurred reading the file:", event);
+    };
+
+    reader.readAsText(file);
+
 }
 
 const render = () => {

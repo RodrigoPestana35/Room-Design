@@ -83,6 +83,33 @@
             <div class="model-controls">
                <label for="model-file">Modelo:</label>
                <input type="file" id="model-file" accept=".obj">
+               <label>Posicao do Modelo:</label>
+               <label for="model-position-x">X:</label>
+               <input type="number" id="model-position-x" placeholder="0">
+               <label for="model-position-y">Y:</label>
+               <input type="number" id="model-position-y" placeholder="0">
+               <label for="model-position-z">Z:</label>
+               <input type="number" id="model-position-z" placeholder="0">
+               <label>Rotacao do Modelo:</label>
+               <label for="model-direction-x">X:</label>
+               <input type="number" id="model-direction-x" placeholder="0">
+               <label for="model-direction-y">Y:</label>
+               <input type="number" id="model-direction-y" placeholder="0">
+               <label for="model-direction-z">Z:</label>
+               <input type="number" id="model-direction-z" placeholder="0">
+               <label for="model-scale">Escala:</label>
+               <input type="number" id="model-scale" placeholder="1">
+               <label>Cor/Textura:</label>
+               <div>
+                    <label for="use-color">Cor</label>
+                    <input type="radio" id="use-color" name="material" value="color" checked>
+                    <label for="use-texture">Textura</label>
+                    <input type="radio" id="use-texture" name="material" value="texture">
+               </div>
+               <label for="model-color">Cor:</label>
+               <input type="color" id="model-color" value="">
+               <label for="model-texture">Textura:</label>
+               <input type="file" id="model-texture" accept=".jpg, .jpeg, .png">
                <button id="add-model">Adicionar Modelo</button>
             </div>
             <div class="object-controls">
