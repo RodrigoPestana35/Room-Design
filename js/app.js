@@ -69,6 +69,9 @@ window.onload = function () {
     init();
 }
 
+/**
+ * Runs on load. Creates canvas, setups room and camera and adds listeners do html elements
+ * */
 function init() {
 
     // *** Get canvas ***
@@ -172,7 +175,11 @@ function init() {
     render();
 }
 
+/**
+ * Function that is tied to button listener. Creates primitives.
+ * */
 const addPrimitive = () => {
+    //Variable assignment
     let primitiveType = document.getElementById('primitive-type').value;
     let height = document.getElementById('primitive-height').value;
     let width = document.getElementById('primitive-width').value;
@@ -189,11 +196,13 @@ const addPrimitive = () => {
     let valid;
     valid = primitiveType && height && width && depth && materialType;
 
+    //if to make sure the object is created within the limits of the room
     if (valid && nPrimitivas < 10 && (x,y,z >= -5) && (x,y,z <= 5)){
         switch (primitiveType) {
         case "cube":
             geometry = new THREE.BoxGeometry(width, height, depth);
             if (materialType == "color") {
+                //Cube creator that uses option colors
                 material = new THREE.MeshPhongMaterial({color: color});
                 cube = new THREE.Mesh(geometry, material);
                 cube.position.set(x,y,z);
@@ -205,6 +214,7 @@ const addPrimitive = () => {
                 posY[cube.id]=0;
                 posZ[cube.id]=0;
             }  else if (materialType == "tex") {
+                //Cube creator that uses option textures
                 let input = document.getElementById("prim-texture");
                 if(input.files.length==0){
                         console.log("Erro Textura");
@@ -239,6 +249,7 @@ const addPrimitive = () => {
         case "pyramid":
             geometry = new THREE.ConeGeometry(width, height, 4);
             if (materialType === "color") {
+                //Pyramid created that uses option color
                 material = new THREE.MeshPhongMaterial({color: color});
                 pyramid = new THREE.Mesh(geometry, material);
                 pyramid.position.set(x,y,z);
@@ -250,6 +261,7 @@ const addPrimitive = () => {
                 posY[pyramid.id]=0;
                 posZ[pyramid.id]=0;
             }  else if (materialType == "tex") {
+                //Pyramid creation that uses option texture
                 let input = document.getElementById("prim-texture");
                 if(input.files.length==0){
                     console.log("Erro Textura");
@@ -288,7 +300,11 @@ const addPrimitive = () => {
     updateObjectList();
 }
 
+/**
+ * Function that is tied to button listener. Creates lights.
+ * */
 const addLight = () => {
+    //variable assignment
     let x = document.getElementById("light-position-x").value;
     let y = document.getElementById("light-position-y").value;
     let z = document.getElementById("light-position-z").value;
@@ -299,7 +315,7 @@ const addLight = () => {
     let lighttype = document.getElementById("light-type").value;
     let intensity = document.getElementById("light-intensity").value;
 
-
+    //switch that checks light type and executes different blocks of code to create different types of light
     switch(lighttype){
         case "ambient":
             light = new THREE.AmbientLight(color, intensity);
@@ -307,7 +323,6 @@ const addLight = () => {
             break;
         case "directional":
             light = new THREE.DirectionalLight(color, intensity);
-            light.castShadow = true;
             light.position.set(x,y,z);
             light.target.position.set(directionx,directiony,directionz);
             var lightHelper = new THREE.DirectionalLightHelper(light,0.2,0x000000);
@@ -317,7 +332,6 @@ const addLight = () => {
             break;
         case "point":
             light = new THREE.PointLight(color, intensity, 20, 0.1);
-            light.castShadow = true;
             light.position.set(x,y,z);
             var lightHelper = new THREE.PointLightHelper(light,0.2,0x000000);
             scene.add(lightHelper);
@@ -406,6 +420,9 @@ function addModel(){
 
 }
 
+/**
+ * The render loop. Checks buttons pressed and object to manipulate.
+ * */
 const render = () => {
     if (objectToManipulate !== undefined){
         let id = objectToManipulate.id;
@@ -436,8 +453,11 @@ const render = () => {
     requestAnimationFrame(render);
 }
 
+/**
+ * Function created to setup the initial room. Makes and adds walls, floor, an ambient light and a pointlight.
+ * */
 function setupRoom(){
-    console.log("SETUP ROOM");
+    //Creates walls
     const geometry = new THREE.PlaneGeometry(10,10);
     const material1 = new THREE.MeshPhongMaterial({color: 0xffffff});
     const material2 = new THREE.MeshPhongMaterial({color: 0xffffff});
@@ -445,9 +465,12 @@ function setupRoom(){
     const wall1 = new THREE.Mesh(geometry, material1);
     const wall2= new THREE.Mesh(geometry, material2);
     const wall3= new THREE.Mesh(geometry, material3);
+    wall1.material.side = THREE.DoubleSide;
+    wall2.material.side = THREE.DoubleSide;
+    wall3.material.side = THREE.DoubleSide;
 
+    //Creates lights
     const pl = new THREE.PointLight(0xffffff, 2, 20,0.1);
-    pl.castShadow = true;
     pl.position.set(0,5,0);
     const plHelper = new THREE.PointLightHelper(pl,0.2, 0x000000);
     scene.add(pl);
@@ -456,9 +479,7 @@ function setupRoom(){
     const al = new THREE.AmbientLight(0xffffff, 0.2);
     scene.add(al);
 
-    wall1.material.side = THREE.DoubleSide;
-    wall2.material.side = THREE.DoubleSide;
-    wall3.material.side = THREE.DoubleSide;
+    //Rotates and places walls to simulate a room
     wall1.rotation.set(0,0, Math.PI/2);
     wall2.rotation.set(0, Math.PI/2, 0);
     wall3.rotation.set(Math.PI/2, 0, 0);
