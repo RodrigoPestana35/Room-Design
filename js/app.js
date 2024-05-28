@@ -6,7 +6,6 @@ let camera, scene, renderer, geometry, material, cube, pyramid, light, controls;
 
 // *** Camera movement speed ***
 let speed = 0.05;   //velocidade do movimento da camera
-let viewMatrix = mat4.create();
 
 // *** Object to manipulate ***
 let objectToManipulate;
@@ -25,6 +24,7 @@ let moveCamera = {
 };
 
 let nPrimitivas = 0;
+let nModels = 0;
 
 window.addEventListener('keydown', (event) => {
     if (event.key in moveCamera) {
@@ -89,21 +89,6 @@ function init() {
         }
     })
 
-    document.getElementById('tex').style.display = 'none';
-    document.getElementById('primitive-color').style.display = 'none';
-
-    var radioBtn = document.getElementsByName('option-prim');
-
-    for (var i = 0, len = radioBtn.length; i < len; i++) {
-        radioBtn[i].addEventListener('click', function() {
-            if (this.value === 'color') {
-                document.getElementById('primitive-color').style.display = 'block';
-                document.getElementById('tex').style.display = 'none';
-            } else {
-                document.getElementById('primitive-color').style.display = 'none';
-                document.getElementById('tex').style.display = 'block';}
-        })
-    }
     document.getElementById('primitive-type').addEventListener('change', function(){
         if (document.getElementById('primitive-type').value === 'cube'){
             document.getElementById('primitive-depth').style.display = 'block';
@@ -199,37 +184,102 @@ const addPrimitive = () => {
     let rotationx = document.getElementById('prim-direction-x').value;
     let rotationy = document.getElementById('prim-direction-y').value;
     let rotationz = document.getElementById('prim-direction-z').value;
+    let materialType = document.querySelector('input[name="option-prim"]:checked').value;
 
     let valid;
-    valid = primitiveType && height && width && depth && color;
+    valid = primitiveType && height && width && depth && materialType;
 
     if (valid && nPrimitivas < 10 && (x,y,z >= -5) && (x,y,z <= 5)){
         switch (primitiveType) {
         case "cube":
             geometry = new THREE.BoxGeometry(width, height, depth);
-            material = new THREE.MeshPhongMaterial({color: color});
-            cube = new THREE.Mesh(geometry, material);
-            cube.position.set(x,y,z);
-            cube.rotation.set(rotationx,rotationy,rotationz);
-            cube.name="cube "+nPrimitivas;
-            scene.add(cube);
-            nPrimitivas++;
-            posX[cube.id]=0;
-            posY[cube.id]=0;
-            posZ[cube.id]=0;
+            if (materialType == "color") {
+                material = new THREE.MeshPhongMaterial({color: color});
+                cube = new THREE.Mesh(geometry, material);
+                cube.position.set(x,y,z);
+                cube.rotation.set(rotationx,rotationy,rotationz);
+                cube.name="cube "+nPrimitivas;
+                scene.add(cube);
+                nPrimitivas++;
+                posX[cube.id]=0;
+                posY[cube.id]=0;
+                posZ[cube.id]=0;
+            }  else if (materialType == "tex") {
+                let input = document.getElementById("prim-texture");
+                if(input.files.length==0){
+                        console.log("Erro Textura");
+                } else {
+                    let file = input.files[0];
+                    let reader = new FileReader();
+                    reader.onload = function(event) {
+                        let img = event.target.result;
+                        const loader = new THREE.TextureLoader();
+
+                        loader.load(img, function() {
+                            material = new THREE.MeshPhongMaterial({ map: loader.load(img)});
+                            cube = new THREE.Mesh(geometry, material);
+                            cube.position.set(x,y,z);
+                            cube.rotation.set(rotationx,rotationy,rotationz);
+                            cube.name="cube "+nPrimitivas;
+                            scene.add(cube);
+                            nPrimitivas++;
+                            posX[cube.id]=0;
+                            posY[cube.id]=0;
+                            posZ[cube.id]=0;
+                        });
+
+                        loader.onerror = function(event) {
+                            console.error("An error occurred reading the file:", event);
+                        };
+                    };
+                    reader.readAsDataURL(file);
+                };
+            }
             break;
         case "pyramid":
             geometry = new THREE.ConeGeometry(width, height, 4);
-            material = new THREE.MeshPhongMaterial({color: color});
-            pyramid = new THREE.Mesh(geometry, material);
-            pyramid.position.set(x,y,z);
-            pyramid.rotation.set(rotationx,rotationy,rotationz);
-            pyramid.name="pyramid "+nPrimitivas;
-            scene.add(pyramid);
-            nPrimitivas++;
-            posX[pyramid.id]=0;
-            posY[pyramid.id]=0;
-            posZ[pyramid.id]=0;
+            if (materialType === "color") {
+                material = new THREE.MeshPhongMaterial({color: color});
+                pyramid = new THREE.Mesh(geometry, material);
+                pyramid.position.set(x,y,z);
+                pyramid.rotation.set(rotationx,rotationy,rotationz);
+                pyramid.name="pyramid "+nPrimitivas;
+                scene.add(pyramid);
+                nPrimitivas++;
+                posX[pyramid.id]=0;
+                posY[pyramid.id]=0;
+                posZ[pyramid.id]=0;
+            }  else if (materialType == "tex") {
+                let input = document.getElementById("prim-texture");
+                if(input.files.length==0){
+                    console.log("Erro Textura");
+                } else {
+                    let file = input.files[0];
+                    let reader = new FileReader();
+                    reader.onload = function(event) {
+                        let img = event.target.result;
+                        const loader = new THREE.TextureLoader();
+
+                        loader.load(img, function() {
+                            material = new THREE.MeshPhongMaterial({ map: loader.load(img)});
+                            pyramid = new THREE.Mesh(geometry, material);
+                            pyramid.position.set(x,y,z);
+                            pyramid.rotation.set(rotationx,rotationy,rotationz);
+                            pyramid.name="pyramid "+nPrimitivas;
+                            scene.add(pyramid);
+                            nPrimitivas++;
+                            posX[pyramid.id]=0;
+                            posY[pyramid.id]=0;
+                            posZ[pyramid.id]=0;
+                        });
+
+                        loader.onerror = function(event) {
+                            console.error("An error occurred reading the file:", event);
+                        };
+                    };
+                    reader.readAsDataURL(file);
+                };
+            }
             break;
         default:
             return -1;
@@ -248,6 +298,7 @@ const addLight = () => {
     let color = document.getElementById("light-color").value;
     let lighttype = document.getElementById("light-type").value;
     let intensity = document.getElementById("light-intensity").value;
+
 
     switch(lighttype){
         case "ambient":
