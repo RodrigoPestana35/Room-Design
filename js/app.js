@@ -25,7 +25,6 @@ let moveCamera = {
 };
 
 let nPrimitivas = 0;
-let nModels = 0;
 
 window.addEventListener('keydown', (event) => {
     if (event.key in moveCamera) {
@@ -81,6 +80,62 @@ function init() {
     //** Create a scene
     scene = new THREE.Scene();
 
+    //Add listeners to select to make relevant options appear
+    document.getElementById('primitive-type').addEventListener('change', function(){
+        if (document.getElementById('primitive-type').value === 'cube'){
+            document.getElementById('primitive-depth').style.display = 'block';
+        } else {
+            document.getElementById('primitive-depth').style.display = 'none';
+        }
+    })
+
+    document.getElementById('tex').style.display = 'none';
+    document.getElementById('primitive-color').style.display = 'none';
+
+    var radioBtn = document.getElementsByName('option-prim');
+
+    for (var i = 0, len = radioBtn.length; i < len; i++) {
+        radioBtn[i].addEventListener('click', function() {
+            if (this.value === 'color') {
+                document.getElementById('primitive-color').style.display = 'block';
+                document.getElementById('tex').style.display = 'none';
+            } else {
+                document.getElementById('primitive-color').style.display = 'none';
+                document.getElementById('tex').style.display = 'block';}
+        })
+    }
+    document.getElementById('primitive-type').addEventListener('change', function(){
+        if (document.getElementById('primitive-type').value === 'cube'){
+            document.getElementById('primitive-depth').style.display = 'block';
+        } else {
+            document.getElementById('primitive-depth').style.display = 'none';
+        }
+    })
+    document.getElementById('light-type').addEventListener('change', function(){
+        if (document.getElementById('light-type').value === 'ambient'){
+            document.getElementById('light-position-x').style.display = 'none';
+            document.getElementById('light-position-y').style.display = 'none';
+            document.getElementById('light-position-z').style.display = 'none';
+            document.getElementById('light-direction-x').style.display = 'none';
+            document.getElementById('light-direction-y').style.display = 'none';
+            document.getElementById('light-direction-z').style.display = 'none';
+        } else if (document.getElementById('light-type').value === 'directional'){
+            document.getElementById('light-position-x').style.display = 'block';
+            document.getElementById('light-position-y').style.display = 'block';
+            document.getElementById('light-position-z').style.display = 'block';
+            document.getElementById('light-direction-x').style.display = 'block';
+            document.getElementById('light-direction-y').style.display = 'block';
+            document.getElementById('light-direction-z').style.display = 'block';
+        } else {
+            document.getElementById('light-position-x').style.display = 'block';
+            document.getElementById('light-position-y').style.display = 'block';
+            document.getElementById('light-position-z').style.display = 'block';
+            document.getElementById('light-direction-x').style.display = 'none';
+            document.getElementById('light-direction-y').style.display = 'none';
+            document.getElementById('light-direction-z').style.display = 'none';
+        }
+    })
+
     //Get button listeners
     document.getElementById('adicionar-primitiva').addEventListener('click', addPrimitive);
     document.getElementById("add-light").addEventListener('click', addLight);
@@ -130,8 +185,6 @@ function init() {
 
     // *** Render ***
     render();
-
-
 }
 
 const addPrimitive = () => {
@@ -186,7 +239,6 @@ const addPrimitive = () => {
 }
 
 const addLight = () => {
-    //TODO
     let x = document.getElementById("light-position-x").value;
     let y = document.getElementById("light-position-y").value;
     let z = document.getElementById("light-position-z").value;

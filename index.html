@@ -47,27 +47,37 @@
                     <option value="pyramid">Piramide Quadrangular</option>
                 </select>
                <label for="primitive-height">Altura:</label>
-               <input type="number" id="primitive-height" placeholder="0">
+               <input type="number" id="primitive-height" placeholder="0" value=0>
                <label for="primitive-width">Largura:</label>
-               <input type="number" id="primitive-width" placeholder="0">
+               <input type="number" id="primitive-width" placeholder="0" value=0>
                <label for="primitive-depth">Profundidade:</label>
-               <input type="number" id="primitive-depth" placeholder="0">
-               <label for="primitive-color">Cor:</label>
-               <input type="color" id="primitive-color" value="">
+               <input type="number" id="primitive-depth" placeholder="0" value=0>
+               <br>
+               <form>
+                  <input type="radio" id="prim-color" value="color" name="option-prim">Color</input>
+                  <input type="radio" id="prim-text" value="tex" name="option-prim">Texture</input>
+               </form>
+
+               <input type="color" id="primitive-color" value="" >
+               <select id="tex">
+                  <option value="tex1">Textura 1</option>
+                  <option value="tex2">Textura 2</option>
+                  <option value="tex3">Textura 3</option>
+               </select>
                <label>Posicao da Primitiva:</label>
                <label for="prim-position-x">X:</label>
-               <input type="text" id="prim-position-x" placeholder="0">
+               <input type="text" id="prim-position-x" value=0>
                <label for="prim-position-y">Y:</label>
-               <input type="text" id="prim-position-y" placeholder="0">
+               <input type="text" id="prim-position-y" value=0>
                <label for="prim-position-z">Z:</label>
-               <input type="text" id="prim-position-z" placeholder="0">
+               <input type="text" id="prim-position-z" value=0>
                <label>Rotacao da Primitiva:</label>
                <label for="prim-direction-x">X:</label>
-               <input type="text" id="prim-direction-x" placeholder="0">
+               <input type="text" id="prim-direction-x" value=0>
                <label for="prim-direction-y">Y:</label>
-               <input type="text" id="prim-direction-y" placeholder="0">
+               <input type="text" id="prim-direction-y" value=0>
                <label for="prim-direction-z">Z:</label>
-               <input type="text" id="prim-direction-z" placeholder="0">
+               <input type="text" id="prim-direction-z" value=0>
                <button id="adicionar-primitiva">Adicionar Primitiva</button>
             </div>
             <div class="model-controls">
@@ -143,26 +153,26 @@
             </div>
             <div class="light-controls">
                <label for="light-intensity">Intensidade:</label>
-               <input type="text" id="light-intensity" placeholder="0">
+               <input type="text" id="light-intensity" value="0">
                <label>Posicao da Luz:</label>
                <label for="light-position-x">X:</label>
-               <input type="text" id="light-position-x" placeholder="x">
+               <input type="text" id="light-position-x" value="0">
                <label for="light-position-y">Y:</label>
-               <input type="text" id="light-position-y" placeholder="y">
+               <input type="text" id="light-position-y" value="0">
                <label for="light-position-z">Z:</label>
-               <input type="text" id="light-position-z" placeholder="z">
+               <input type="text" id="light-position-z" value="0">
                <label>Direcao da Luz:</label>
                <label for="light-direction-x">X:</label>
-               <input type="text" id="light-direction-x" placeholder="x">
+               <input type="text" id="light-direction-x" value="0">
                <label for="light-direction-y">Y:</label>
-               <input type="text" id="light-direction-y" placeholder="y">
+               <input type="text" id="light-direction-y" value="0">
                <label for="light-direction-z">Z:</label>
-               <input type="text" id="light-direction-z" placeholder="z">
+               <input type="text" id="light-direction-z" value="0">
                <label>Cor da Luz:</label>
                <input type="color" id="light-color" value="">
                <select id="light-type">
-                  <option value="ambient">Ambient</option>
                   <option value="directional">Directional</option>
+                  <option value="ambient">Ambient</option>
                   <option value="point">Point</option>
                </select>
                <button id="add-light">Adicionar Luz</button>
