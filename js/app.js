@@ -433,7 +433,12 @@ const changeDimension = () => {
 const manipulateObject = () => {
     let objectList = document.getElementById("object-list");
     let objectName = objectList.value;
-    objectToManipulate = scene.children.find(obj => obj.name == objectName);
+    if(objectName) {
+        objectToManipulate = scene.children.find(obj =>  obj.name === objectName && (obj.type === 'Mesh' || obj.type === 'Group'));
+        //objectToManipulate = scene.children.find(obj =>  obj.name === objectName);
+    }
+    console.log(objectToManipulate);
+
 }
 const openModal = () => {
     let input = document.getElementById("input-texture");
