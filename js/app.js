@@ -129,7 +129,7 @@ const addPrimitive = () => {
     let valid;
     valid = primitiveType && height && width && depth && color;
 
-    if (valid && nPrimitivas < 10){
+    if (valid && nPrimitivas < 10 && (x,y,z >= -5) && (x,y,z <= 5)){
         switch (primitiveType) {
         case "cube":
             console.log("cube");
