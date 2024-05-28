@@ -268,6 +268,7 @@ function addModel(){
         const loader = new OBJLoader();
 
         let object = loader.parse(contents);
+        let id = object.id
         object.name = "model" + nModels;
         object.position.set(positionX, positionY, positionZ);
         object.rotation.set(rotationX, rotationY, rotationZ);
@@ -297,6 +298,10 @@ function addModel(){
         }
         scene.add(object);
         nModels++;
+        updateObjectList();
+        posX[id] = 0;
+        posY[id] = 0;
+        posZ[id] = 0;
     };
 
     reader.onerror = function(event) {
@@ -310,7 +315,7 @@ function addModel(){
 const render = () => {
     if (objectToManipulate !== undefined){
         let id = objectToManipulate.id;
-        console.log(objectToManipulate.name + " " + posX[id]);
+        console.log(objectToManipulate.id + " " + posX[id]);
         objectToManipulate.position.set(posX[id], posY[id], posZ[id]);
     }
 
