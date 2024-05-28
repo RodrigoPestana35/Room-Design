@@ -1,5 +1,6 @@
 import * as THREE from './three.module.js';
 import {PointerLockControls} from './PointerLockControls.js';
+import {OBJLoader} from "./OBJLoader.js";
 // *** Global variables ***
 let camera, scene, renderer, geometry, material, cube, pyramid, light, controls;
 
@@ -22,6 +23,7 @@ let moveCamera = {
 };
 
 let nPrimitivas = 0;
+let nModels = 0;
 
 window.addEventListener('keydown', (event) => {
     if (event.key in moveCamera) {
@@ -72,6 +74,8 @@ function init() {
     document.getElementById('adicionar-primitiva').addEventListener('click', addPrimitive);
     document.getElementById("add-light").addEventListener('click', addLight);
     document.getElementById("manipulate-object").addEventListener('click', manipulateObject);
+    document.getElementById("add-model").addEventListener('click', addModel);
+
     //*Camera
     const fov = 75;
     const near = 0.1;
@@ -196,6 +200,43 @@ const addLight = () => {
             scene.add(light);
             break;
     }
+}
+
+function addModel(){
+    //TODO
+    console.log("Add model");
+    if (nModels >= 5){
+        console.log("Maximo de modelos atingido");
+        return;
+    }
+    let files = document.getElementById("model-file").files;
+    if (files.length === 0){
+        console.log("Nenhum arquivo selecionado");
+        return;
+    }
+    let file = files[0];
+    let positionX = parseFloat(document.getElementById("model-position-x").value);
+    let positionY = parseFloat(document.getElementById("model-position-y").value);
+    let positionZ = parseFloat(document.getElementById("model-position-z").value);
+    let rotationX = parseFloat(document.getElementById("model-direction-x").value);
+    let rotationY = parseFloat(document.getElementById("model-direction-y").value);
+    let rotationZ = parseFloat(document.getElementById("model-direction-z").value);
+
+    const loader = new OBJLoader();
+
+    loader.load(file, function(object){
+        object.name = "model"+nModels;
+        object.position.set(positionX,positionY,positionZ);
+        object.rotation.set(rotationX,rotationY,rotationZ);
+        scene.add(object);
+        nModels++;
+    }, function (xhr){
+        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+    }, function (error){
+        console.log('An error happened');
+    }
+);
+
 }
 
 const render = () => {
