@@ -38,22 +38,34 @@ window.addEventListener('keydown', (event) => {
             let id = objectToManipulate.id;
             switch (event.key) {
                 case'PageUp':
-                    posY[id]++;
+                    if(posY[id]<5) { //verify if the object is inside the walls
+                        posY[id]++;
+                    }
                     break;
                 case'PageDown':
-                    posY[id]--;
+                    if(posY[id]>-5) {//verify if the object is inside the walls
+                        posY[id]--;
+                    }
                     break;
                 case'ArrowUp':
-                    posZ[id]++;
+                    if(posZ[id]<5) {//verify if the object is inside the walls
+                        posZ[id]++;
+                    }
                     break;
                 case'ArrowDown':
-                    posZ[id]--;
+                    if(posZ[id]>-5) {//verify if the object is inside the walls
+                        posZ[id]--;
+                    }
                     break;
                 case'ArrowLeft':
-                    posX[id]--;
+                    if(posX[id]>-5) {//verify if the object is inside the walls
+                        posX[id]--;
+                    }
                     break;
                 case'ArrowRight':
-                    posX[id]++;
+                    if(posX[id]<5) {//verify if the object is inside the walls
+                        posX[id]++;
+                    }
                     break;
                 default:
             }
