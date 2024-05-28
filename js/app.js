@@ -203,7 +203,6 @@ const addLight = () => {
 }
 
 function addModel(){
-    //TODO
     console.log("Add model");
     if (nModels >= 5){
         console.log("Maximo de modelos atingido");
@@ -226,6 +225,10 @@ function addModel(){
         let rotationX = parseFloat(document.getElementById("model-direction-x").value) || 0;
         let rotationY = parseFloat(document.getElementById("model-direction-y").value) || 0;
         let rotationZ = parseFloat(document.getElementById("model-direction-z").value) || 0;
+        let scale = parseFloat(document.getElementById("model-scale").value) || 1;
+        let materialType = document.querySelector('input[name="material"]:checked').value;
+        let colorInput = document.getElementById("model-color");
+        let textureInput = document.getElementById("model-texture");
 
         const loader = new OBJLoader();
 
@@ -233,6 +236,30 @@ function addModel(){
         object.name = "model" + nModels;
         object.position.set(positionX, positionY, positionZ);
         object.rotation.set(rotationX, rotationY, rotationZ);
+        object.scale.set(scale, scale, scale);
+        if (materialType === "color") {
+            let color = new THREE.Color(colorInput.value);
+            object.traverse(child => {
+                if (child instanceof THREE.Mesh) {
+                    child.material.color = color;
+                }
+            });
+        }
+        else if (materialType === "texture" && textureInput.files.length > 0) {
+            let textureFile = textureInput.files[0];
+            let textureReader = new FileReader();
+
+            textureReader.onload = function(textureEvent) {
+                let texture = new THREE.TextureLoader().load(textureEvent.target.result);
+                object.traverse(function (child) {
+                    if (child instanceof THREE.Mesh) {
+                        child.material = new THREE.MeshBasicMaterial({ map: texture });
+                    }
+                });
+            };
+
+            textureReader.readAsDataURL(textureFile);
+        }
         scene.add(object);
         nModels++;
     };
