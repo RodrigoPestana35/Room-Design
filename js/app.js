@@ -204,6 +204,7 @@ const addPrimitive = () => {
                 posX[cube.id]=x;
                 posY[cube.id]=y;
                 posZ[cube.id]=z;
+                updateObjectList();
             }  else if (materialType == "tex") {
                 let input = document.getElementById("prim-texture");
                 if(input.files.length==0){
@@ -226,12 +227,13 @@ const addPrimitive = () => {
                             posX[cube.id]=x;
                             posY[cube.id]=y;
                             posZ[cube.id]=z;
-                        });
+                            updateObjectList();
+                        })
 
                         loader.onerror = function(event) {
                             console.error("An error occurred reading the file:", event);
-                        };
-                    };
+                        }
+                    }
                     reader.readAsDataURL(file);
                 }
             }
@@ -249,6 +251,7 @@ const addPrimitive = () => {
                 posX[pyramid.id]=x;
                 posY[pyramid.id]=y;
                 posZ[pyramid.id]=z;
+                updateObjectList();
             }  else if (materialType == "tex") {
                 let input = document.getElementById("prim-texture");
                 if(input.files.length==0){
@@ -271,21 +274,21 @@ const addPrimitive = () => {
                             posX[pyramid.id]=x;
                             posY[pyramid.id]=y;
                             posZ[pyramid.id]=z;
-                        });
+                            updateObjectList();
+                        })
 
                         loader.onerror = function(event) {
                             console.error("An error occurred reading the file:", event);
-                        };
-                    };
+                        }
+                    }
                     reader.readAsDataURL(file);
-                };
+                }
             }
             break;
         default:
             return -1;
         }
     }
-    updateObjectList();
 }
 
 const addLight = () => {
@@ -538,7 +541,6 @@ const manipulateObject = () => {
     let objectName = objectList.value;
     if(objectName) {
         objectToManipulate = scene.children.find(obj =>  obj.name === objectName && (obj.type === 'Mesh' || obj.type === 'Group'));
-        //objectToManipulate = scene.children.find(obj =>  obj.name === objectName);
     }
     console.log(objectToManipulate);
 
