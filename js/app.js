@@ -494,6 +494,9 @@ function setupRoom(){
     scene.add(wall3)
 }
 
+/**
+ * Function that is tied to button listener. Eliminates an element in the canvas.
+ * */
 const removeObject = () => {
     scene.remove(objectToManipulate);
     objectToManipulate = undefined;
@@ -501,6 +504,9 @@ const removeObject = () => {
     updateObjectList();
 }
 
+/**
+ * Function that is tied to button listener. Changes the rotation of a selected element in the canvas.
+ * */
 const changeRotation = () =>{
     let x = document.getElementById('new-rotation-x').value;
     let y = document.getElementById('new-rotation-y').value;
@@ -513,6 +519,9 @@ const changeRotation = () =>{
     closeModal();
 }
 
+/**
+ * Function that is tied to button listener. Changes the texture of a selected element in the canvas.
+ * */
 const changeTexture = () =>{
     let input = document.getElementById("input-texture");
     let error = document.getElementById("error");
@@ -547,6 +556,9 @@ const changeTexture = () =>{
     closeModal();
 }
 
+/**
+ * Function that is tied to button listener. Changes the dimension of a selected element in the canvas.
+ * */
 const changeDimension = () => {
     let x = document.getElementById('new-x').value;
     let y = document.getElementById('new-y').value;
@@ -557,6 +569,9 @@ const changeDimension = () => {
     closeModal();
 }
 
+/**
+ * Function that is tied to button listener. Selects an element in the canvas.
+ * */
 const manipulateObject = () => {
     let objectList = document.getElementById("object-list");
     let objectName = objectList.value;
@@ -566,6 +581,10 @@ const manipulateObject = () => {
     console.log(objectToManipulate);
 
 }
+
+/**
+ * Function that is tied to button listener. Opens a modal dialog to manipulate a selected element in the canvas.
+ * */
 const openModal = () => {
     let input = document.getElementById("input-texture");
     let objectControls = document.querySelector(".object-controls");
@@ -583,11 +602,17 @@ const openModal = () => {
     }
 }
 
+/**
+ * Function that is tied to button listener. Closes the modal dialog.
+ * */
 const closeModal = () => {
     document.getElementById("input-texture").value="";
     document.getElementById("modal").style.display = "none";
 }
 
+/**
+ * Function that updates the drop-down list of the elements in the canvas.
+ * */
 function updateObjectList(){
     let objectList = document.getElementById("object-list");
     objectList.innerHTML = "";
