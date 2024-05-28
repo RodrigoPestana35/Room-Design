@@ -400,6 +400,7 @@ const changeRotation = () =>{
 const changeTexture = () =>{
     let input = document.getElementById("input-texture");
     let error = document.getElementById("error");
+    console.log("asdasdas");
     error.innerText="";
     if(input.files.length==0){
         error.innerText = "Nenhuma Textura Selecionada";
@@ -410,8 +411,21 @@ const changeTexture = () =>{
         reader.onload = function(event) {
             let img = event.target.result;
             const loader = new THREE.TextureLoader();
-            objectToManipulate.material = new THREE.MeshBasicMaterial({map: loader.load(img)});
+
+            loader.load(img, function() {
+                if (objectToManipulate) {
+                    objectToManipulate.traverse(function(child) {
+                        if (child.isMesh) {
+                            child.material = new THREE.MeshBasicMaterial({ map: loader.load(img)});
+                            child.material.needsUpdate = true;
+                        }
+                    });
+                }
+            });
+
+            /*objectToManipulate.material = new THREE.MeshBasicMaterial({map: loader.load(img)});
             objectToManipulate.material.needsUpdate = true;
+            console.log("2asdasdas "+objectToManipulate + " " + objectToManipulate.material);*/
         };
 
        reader.readAsDataURL(file);
