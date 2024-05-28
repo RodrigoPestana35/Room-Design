@@ -215,27 +215,33 @@ function addModel(){
         return;
     }
     let file = files[0];
-    let positionX = parseFloat(document.getElementById("model-position-x").value);
-    let positionY = parseFloat(document.getElementById("model-position-y").value);
-    let positionZ = parseFloat(document.getElementById("model-position-z").value);
-    let rotationX = parseFloat(document.getElementById("model-direction-x").value);
-    let rotationY = parseFloat(document.getElementById("model-direction-y").value);
-    let rotationZ = parseFloat(document.getElementById("model-direction-z").value);
+    let reader = new FileReader();
 
-    const loader = new OBJLoader();
+    reader.onload = function(event) {
+        let contents = event.target.result;
 
-    loader.load(file, function(object){
-        object.name = "model"+nModels;
-        object.position.set(positionX,positionY,positionZ);
-        object.rotation.set(rotationX,rotationY,rotationZ);
+        let positionX = parseFloat(document.getElementById("model-position-x").value) || 0;
+        let positionY = parseFloat(document.getElementById("model-position-y").value) || 0;
+        let positionZ = parseFloat(document.getElementById("model-position-z").value) || 0;
+        let rotationX = parseFloat(document.getElementById("model-direction-x").value) || 0;
+        let rotationY = parseFloat(document.getElementById("model-direction-y").value) || 0;
+        let rotationZ = parseFloat(document.getElementById("model-direction-z").value) || 0;
+
+        const loader = new OBJLoader();
+
+        let object = loader.parse(contents);
+        object.name = "model" + nModels;
+        object.position.set(positionX, positionY, positionZ);
+        object.rotation.set(rotationX, rotationY, rotationZ);
         scene.add(object);
         nModels++;
-    }, function (xhr){
-        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-    }, function (error){
-        console.log('An error happened');
-    }
-);
+    };
+
+    reader.onerror = function(event) {
+        console.error("An error occurred reading the file:", event);
+    };
+
+    reader.readAsText(file);
 
 }
 
